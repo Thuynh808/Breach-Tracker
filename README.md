@@ -136,15 +136,6 @@ aws athena list-work-groups | head
 
 The `athena_queries.yaml` file contains sample queries designed to extract valuable insights from the CVE data lake. Each query focuses on a specific aspect of vulnerability management, such as critical vulnerabilities, vendor trends, or severity distributions.
 
-**Key highlights**:
-- **Top 100 Critical Windows Vulnerabilities**: Prioritize patching for high-risk Microsoft vulnerabilities
-- **Top 20 Vendors with Most CVEs**: Monitor vendors with the most reported vulnerabilities
-- **Top 20 Microsoft Products with Most Vulnerabilities**: Focus on high-risk Microsoft products
-- **Top 20 Apple Critical CVEs**: Identify severe vulnerabilities in Apple products (CVSS > 9.0)
-- **20 Latest Cisco High and Critical CVEs**: Track recent critical Cisco vulnerabilities
-- **Top 10 CVEs with Most References**: Highlight vulnerabilities with significant community attention
-- **Number of CVEs by Severity Level (CVSS v3)**: Categorize vulnerabilities by severity for better planning
-- **List CVEs with SQL Injection**: Address risks related to SQL injection attacks
 
 **Extending Queries**
 - This file can be easily updated with new queries to meet evolving requirements. Simply modify `athena_queries.yaml`, then run the playbook to generate updated JSON report files, enabling continuous adaptability and insights.
