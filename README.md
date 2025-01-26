@@ -121,18 +121,6 @@ aws athena list-work-groups | head
 ![CVEDataLake](https://i.imgur.com/PhcouoU.png)
   
 - **Environment Setup**:
-  - Ansible (2.15.13) and Python (3.9.21) are correctly installed
-  - AWS libraries (boto3, botocore, requests) wtih proper versions are configured
-- **AWS Configuration**:
-  - Credentials and region (us-east-1) are properly set
-  - IAM identity verified with User ID, Account ID, and ARN  
-- **S3 Bucket**:
-  - `cve-data-lake-thuynh` bucket exists with a valid `raw-data/` prefix
-- **Glue Database**:
-  - **Database**: `glue_cve_data_lake` with appropriate metadata and permissions
-  - **Table**: cve_records exists with creation and update timestamps
-- **Athena Workgroup**:
-  - **Workgroup**: `CVEDataLakeWorkgroup` is active (ENABLED) and ready for queries
 ---
 <br><br>
 ![CVEDataLake](https://i.imgur.com/wob1hNt.png)
