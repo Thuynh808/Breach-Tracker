@@ -2,3 +2,4 @@
 .terraform.lock.hcl
 .git
 terraform.tfstate
+terraform.tfstate.backup
