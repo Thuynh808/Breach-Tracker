@@ -1,35 +1,39 @@
 output "vpc_id" {
-  value       = aws_vpc.btvpc.id
-  description = "The ID of the VPC."
+  value       = module.vpc.vpc_id
+  description = "id of vpc"
 }
 
 output "public_subnet_id" {
-  value       = aws_subnet.public.id
-  description = "The ID of the public subnet."
+  value       = module.vpc.public_subnet_id
+  description = "id of public subnet"
 }
 
 output "private_subnet_id" {
-  value       = aws_subnet.private.id
-  description = "The ID of the private subnet."
+  value       = module.vpc.private_subnet_id
+  description = "id of private subnet"
 }
 
 output "nat_gateway_id" {
-  value       = aws_nat_gateway.btnat.id
-  description = "The ID of the NAT Gateway."
+  value       = module.vpc.nat_gateway_id
+  description = "nat gateway id"
 }
 
 output "internet_gateway_id" {
-  value       = aws_internet_gateway.btigw.id
-  description = "The ID of the Internet Gateway."
+  value       = module.vpc.internet_gateway_id
+  description = "internet gateway id"
 }
 
 output "private_route_table_id" {
-  value       = aws_route_table.private.id
-  description = "The ID of the private route table."
+  value       = module.vpc.private_route_table_id
+  description = "private route table id"
 }
 
 output "public_route_table_id" {
-  value       = aws_route_table.public.id
-  description = "The ID of the public route table."
+  value       = module.vpc.public_route_table_id
+  description = "public route table id"
 }
 
+output "ecs_task_execution_role_arn" {
+  value       = module.iam.ecs_task_executionrole_arn
+  description = "ecs task execution role arn"
+}
