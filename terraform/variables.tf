@@ -7,13 +7,14 @@ variable "aws_region" {
 }
 
 variable "vpc_cidr" {
-  description = "cidr block for the vpc"
+  description = "vpc cidr for resources"
 }
 
 variable "public_subnet_cidr" {
-  description = "cidr block for the public subnet"
+  description = "public subnet cidr block for nat gateway"
 }
 
 variable "private_subnet_cidr" {
-  description = "cidr block for the private subnet"
+  description = "private subnet cidr block for ecs/alb"
 }
+
