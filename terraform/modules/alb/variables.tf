@@ -14,6 +14,5 @@ variable "private_subnet" {
 variable "allowed_cidrs" {
   description = "List of CIDR blocks allowed to access the ALB"
   type        = list(string)
-  default     = ["0.0.0.0/0"]
 }
 

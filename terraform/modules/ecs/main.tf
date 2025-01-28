@@ -34,11 +34,6 @@ resource "aws_ecs_cluster" "bt_cluster" {
   name = "${var.project_name}-cluster"
 }
 
-# references iam ecs task exection role
-data "aws_iam_role" "ecs_task_execution" {
-  name = "${var.project_name}-ecs-task-execution-role"
-}
-
 resource "aws_ecs_task_definition" "bt_task" {
   family = "${var.project_name}-task"
   container_definitions = jsonencode([
@@ -56,7 +51,7 @@ resource "aws_ecs_task_definition" "bt_task" {
       ]
     }
   ])
-  execution_role_arn       = data.aws_iam_role.ecs_task_execution.arn
+  execution_role_arn       = var.ecs_task_execution_role_arn
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                      = "256"

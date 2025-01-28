@@ -24,3 +24,7 @@ variable "alb_target_group_arn" {
   type        = string
 }
 
+variable "ecs_task_execution_role_arn" {
+  description = "arn of execution role for ecs"
+  type        = string
+}

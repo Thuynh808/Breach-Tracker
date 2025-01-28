@@ -8,6 +8,7 @@ module "vpc" {
   vpc_cidr            = var.vpc_cidr
   public_subnet_cidr  = var.public_subnet_cidr
   private_subnet_cidr = var.private_subnet_cidr
+  availability_zones  = var.availability_zones
 }
 
 module "iam" {
@@ -19,15 +20,23 @@ module "alb" {
   source         = "./modules/alb"
   project_name   = var.project_name
   vpc_id         = module.vpc.vpc_id
-  private_subnet = [module.vpc.private_subnet_id]
+  private_subnet = module.vpc.private_subnet_id
   allowed_cidrs  = [] # no direct public access; api gateway will route traffic
 }
 
 module "ecs" {
-  source                = "./modules/ecs"
-  project_name          = var.project_name
-  vpc_id                = module.vpc.vpc_id
-  private_subnet        = [module.vpc.private_subnet_id]
-  alb_target_group_arn  = module.alb.alb_target_group_arn
-  alb_security_group_id = module.alb.alb_security_group_id
+  source                      = "./modules/ecs"
+  project_name                = var.project_name
+  vpc_id                      = module.vpc.vpc_id
+  private_subnet              = module.vpc.private_subnet_id
+  alb_target_group_arn        = module.alb.alb_target_group_arn
+  alb_security_group_id       = module.alb.alb_security_group_id
+  ecs_task_execution_role_arn = module.iam.ecs_task_execution_role_arn
 }
+
+module "api_gateway" {
+  source       = "./modules/api_gateway"
+  project_name = var.project_name
+  alb_dns_name = module.alb.alb_dns_name
+}
+

@@ -18,3 +18,6 @@ variable "private_subnet_cidr" {
   description = "private subnet cidr block for ecs/alb"
 }
 
+variable "availability_zones" {
+  description = "availability_zones"
+}

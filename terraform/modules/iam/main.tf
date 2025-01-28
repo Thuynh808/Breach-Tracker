@@ -1,32 +1,27 @@
-# ECS Task Trust Relationship
-data "aws_iam_policy_document" "ecs_task_trust" {
-  statement {
-    actions = ["sts:AssumeRole"]
-    principals {
-      type        = "Service"
-      identifiers = ["ecs-tasks.amazonaws.com"]
-    }
-  }
-}
-
 # ECS Task Execution Role
 resource "aws_iam_role" "ecs_task_execution_role" {
-  name               = "${var.project_name}-ecs-task-execution-role"
-  assume_role_policy = data.aws_iam_policy_document.ecs_task_trust.json
+  name = "${var.project_name}-ecs-task-execution-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Action = "sts:AssumeRole",
+        Effect = "Allow",
+        Principal = {
+          Service = "ecs-tasks.amazonaws.com"
+        }
+      }
+    ]
+  })
+
   tags = {
     Name = "${var.project_name}-ecs-task-execution-role"
   }
 }
 
-# Attach Managed Policy to ECS Task Execution Role
+# Attach the ECS Task Execution Role Policy
 resource "aws_iam_role_policy_attachment" "ecs_task_execution_attach" {
   role       = aws_iam_role.ecs_task_execution_role.name
-  policy_arn = var.ecs_task_execution_policy
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
-
-# Outputs for the IAM Role
-output "ecs_task_execution_role_arn" {
-  value       = aws_iam_role.ecs_task_execution_role.arn
-  description = "ARN of the ECS Task Execution Role"
-}
-

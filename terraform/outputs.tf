@@ -23,17 +23,67 @@ output "internet_gateway_id" {
   description = "internet gateway id"
 }
 
-output "private_route_table_id" {
-  value       = module.vpc.private_route_table_id
-  description = "private route table id"
-}
-
 output "public_route_table_id" {
   value       = module.vpc.public_route_table_id
-  description = "public route table id"
+  description = "route table for public subnet"
+}
+
+output "private_route_table_id" {
+  value       = module.vpc.private_route_table_id
+  description = "route table for private subnet"
 }
 
 output "ecs_task_execution_role_arn" {
-  value       = module.iam.ecs_task_executionrole_arn
+  value       = module.iam.ecs_task_execution_role_arn
   description = "ecs task execution role arn"
+}
+
+output "alb_target_group_arn" {
+  value       = module.alb.alb_target_group_arn
+  description = "target group arn for ecs"
+}
+
+output "alb_security_group_id" {
+  value       = module.alb.alb_security_group_id
+  description = "security group for alb"
+}
+
+output "alb_dns_name" {
+  value       = module.alb.alb_dns_name
+  description = "dns name for alb"
+}
+
+output "alb_arn" {
+  value       = module.alb.alb_arn
+  description = "arn for alb"
+}
+
+output "ecs_security_group_id" {
+  value       = module.ecs.ecs_security_group_id
+  description = "security group for ecs"
+}
+
+output "ecr_repository_url" {
+  value       = module.ecs.ecr_repository_url
+  description = "ecr repo url"
+}
+
+output "ecs_cluster_name" {
+  value       = module.ecs.ecs_cluster_name
+  description = "cluster name"
+}
+
+output "ecs_task_definition_arn" {
+  value       = module.ecs.ecs_task_definition_arn
+  description = "arn of ecs task definition"
+}
+
+output "ecs_service_name" {
+  value       = module.ecs.ecs_service_name
+  description = "ecs service name"
+}
+
+output "api_endpoint" {
+  value       = module.api_gateway.api_endpoint
+  description = "url endpoint of api gateway"
 }

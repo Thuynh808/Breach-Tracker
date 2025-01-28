@@ -4,18 +4,18 @@ output "vpc_id" {
 }
 
 output "public_subnet_id" {
-  value       = aws_subnet.public.id
-  description = "public subnet id"
+  value       = aws_subnet.public[*].id
+  description = "public subnet ids"
 }
 
 output "private_subnet_id" {
-  value       = aws_subnet.private.id
-  description = "private subnet id"
+  value       = aws_subnet.private[*].id
+  description = "private subnet ids"
 }
 
 output "nat_gateway_id" {
-  value       = aws_nat_gateway.bt_nat.id
-  description = "nat gateway id"
+  value       = aws_nat_gateway.bt_nat[*].id
+  description = "nat gateway ids"
 }
 
 output "internet_gateway_id" {
@@ -23,13 +23,13 @@ output "internet_gateway_id" {
   description = "internet gateway id"
 }
 
-output "private_route_table_id" {
-  value       = aws_route_table.private.id
-  description = "private route table id"
+output "public_route_table_id" {
+  value       = aws_route_table.public[*].id
+  description = "route table for public subnet"
 }
 
-output "public_route_table_id" {
-  value       = aws_route_table.public.id
-  description = "public route table id"
+output "private_route_table_id" {
+  value       = aws_route_table.public[*].id
+  description = "route table for public subnet"
 }
 
