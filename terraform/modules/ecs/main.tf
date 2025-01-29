@@ -24,7 +24,7 @@ resource "aws_security_group" "ecs_sg" {
 }
 
 resource "aws_ecr_repository" "bt_ecr" {
-  name = "${var.project_name}-container-repository"
+  name = var.project_name
   tags = {
     Name = "${var.project_name}-ecr"
   }

@@ -21,3 +21,8 @@ variable "private_subnet_cidr" {
 variable "availability_zones" {
   description = "availability_zones"
 }
+
+variable "allowed_cidrs" {
+  description = "aws api_gateway public cidrs"
+  type        = list(string)
+}
