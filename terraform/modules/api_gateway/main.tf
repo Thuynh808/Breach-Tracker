@@ -30,7 +30,7 @@ resource "aws_security_group" "vpc_link_sg" {
 
 resource "aws_apigatewayv2_vpc_link" "bt_vpc_link" {
   name               = "${var.project_name}-vpc-link"
-  security_group_ids = var.alb_security_group_id
+  security_group_ids = [aws_security_group.vpc_link_sg.id]
   subnet_ids         = var.private_subnet_id
 
   tags = {
@@ -49,7 +49,7 @@ resource "aws_apigatewayv2_integration" "bt_integration" {
 
 resource "aws_apigatewayv2_route" "bt_route" {
   api_id    = aws_apigatewayv2_api.bt_api.id
-  route_key = "ANY /breaches/{proxy+}"
+  route_key = "ANY /breaches"
 
   target = "integrations/${aws_apigatewayv2_integration.bt_integration.id}"
 }

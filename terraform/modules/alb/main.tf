@@ -7,7 +7,7 @@ resource "aws_security_group" "alb_sg" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = var.private_subnet
+    cidr_blocks = var.private_subnet_cidr
   }
 
   egress {
@@ -26,7 +26,7 @@ resource "aws_lb" "alb" {
   name                       = "${var.project_name}-alb"
   internal                   = true
   security_groups            = [aws_security_group.alb_sg.id]
-  subnets                    = var.private_subnet
+  subnets                    = var.private_subnet_id
   enable_deletion_protection = false
 
   tags = {
@@ -42,7 +42,7 @@ resource "aws_lb_target_group" "ecs_tg" {
   target_type = "ip"
 
   health_check {
-    path                = "/breaches"
+    path                = "/health"
     interval            = 30
     timeout             = 5
     healthy_threshold   = 2
