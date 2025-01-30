@@ -22,3 +22,5 @@ allowed_cidrs = [
   "44.218.96.0/23",
   "44.220.28.0/22"
 ]
+
+ecr_repository_name = "breach-tracker"

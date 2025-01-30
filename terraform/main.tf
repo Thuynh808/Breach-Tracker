@@ -32,11 +32,14 @@ module "ecs" {
   alb_target_group_arn        = module.alb.alb_target_group_arn
   alb_security_group_id       = module.alb.alb_security_group_id
   ecs_task_execution_role_arn = module.iam.ecs_task_execution_role_arn
+  ecr_repository_name         = var.ecr_repository_name
 }
 
 module "api_gateway" {
-  source       = "./modules/api_gateway"
-  project_name = var.project_name
-  alb_dns_name = module.alb.alb_dns_name
+  source                = "./modules/api_gateway"
+  project_name          = var.project_name
+  alb_dns_name          = module.alb.alb_dns_name
+  alb_security_group_id = module.alb.abl_security_group_id
+  private_subnet_id     = module.vpc.private_subnet_id
 }
 

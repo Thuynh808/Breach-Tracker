@@ -23,11 +23,9 @@ resource "aws_security_group" "ecs_sg" {
   }
 }
 
-resource "aws_ecr_repository" "bt_ecr" {
-  name = var.project_name
-  tags = {
-    Name = "${var.project_name}-ecr"
-  }
+data "aws_ecr_image" "service_image" {
+  repository_name = var.ecr_repository_name
+  image_tag       = "latest"
 }
 
 resource "aws_ecs_cluster" "bt_cluster" {
@@ -39,14 +37,14 @@ resource "aws_ecs_task_definition" "bt_task" {
   container_definitions = jsonencode([
     {
       name      = "app-container"
-      image     = "${aws_ecr_repository.bt_ecr.repository_url}:latest"
+      image     = "${data.aws_ecr_image.service_image.image_uri}:latest"
       cpu       = 256
       memory    = 512
       essential = true
       portMappings = [
         {
-          containerPort = 80
-          hostPort      = 80
+          containerPort = 8080
+          hostPort      = 8080
         }
       ]
     }

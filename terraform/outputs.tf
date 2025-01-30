@@ -63,9 +63,9 @@ output "ecs_security_group_id" {
   description = "security group for ecs"
 }
 
-output "ecr_repository_url" {
-  value       = module.ecs.ecr_repository_url
-  description = "ecr repo url"
+output "ecr_image_uri" {
+  value       = module.ecs.ecr_image_uri
+  description = "ecr image url"
 }
 
 output "ecs_cluster_name" {

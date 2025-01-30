@@ -4,12 +4,6 @@ output "ecs_security_group_id" {
   description = "Security group ID for ECS tasks"
 }
 
-# URL of the ECR repository
-output "ecr_repository_url" {
-  value       = aws_ecr_repository.bt_ecr.repository_url
-  description = "The URL of the ECR repository"
-}
-
 # Name of the ECS cluster
 output "ecs_cluster_name" {
   value       = aws_ecs_cluster.bt_cluster.name
@@ -28,3 +22,7 @@ output "ecs_service_name" {
   description = "The name of the ECS service"
 }
 
+output "ecr_image_uri" {
+  value       = data.aws_ecr_image.service_image.image_uri
+  description = "image uri of ecr container image"
+}
