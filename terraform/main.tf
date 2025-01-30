@@ -39,7 +39,7 @@ module "api_gateway" {
   source                = "./modules/api_gateway"
   project_name          = var.project_name
   alb_dns_name          = module.alb.alb_dns_name
-  alb_security_group_id = module.alb.abl_security_group_id
+  alb_security_group_id = module.alb.alb_security_group_id
   private_subnet_id     = module.vpc.private_subnet_id
 }
 

@@ -6,7 +6,7 @@ resource "aws_apigatewayv2_api" "bt_api" {
 
 resource "aws_apigatewayv2_vpc_link" "bt_vpc_link" {
   name               = "${var.project_name}-vpc-link"
-  security_group_ids = var.alb_security_group_id
+  security_group_ids = [var.alb_security_group_id]
   subnet_ids         = var.private_subnet_id
 
   tags = {
@@ -19,7 +19,7 @@ resource "aws_apigatewayv2_integration" "bt_integration" {
   integration_type   = "HTTP_PROXY"
   integration_method = "ANY"
   connection_type    = "VPC_LINK"
-  integration_uri    = "http://${var.alb_dnf_name}/{proxy+}"
+  integration_uri    = "http://${var.alb_dns_name}/{proxy+}"
 }
 
 resource "aws_apigatewayv2_route" "bt_route" {

@@ -62,9 +62,9 @@
     loop:
       - "aws ecr get-login-password --region us-east-1 | podman login --username AWS --password-stdin {{ aws_account_id }}.dkr.ecr.us-east-1.amazonaws.com"
       - "podman build --platform linux/amd64 -t {{ project_name }} ."
-      - "podman tag {{ project_name }}:latest {{ aws_account_id }}.dkr.ecr.us-east-1.amazonaws.com/{{ project_name }}:{{ project_name }}"
+      - "podman tag {{ project_name }}:latest {{ aws_account_id }}.dkr.ecr.us-east-1.amazonaws.com/{{ project_name }}:latest"
   - name: push image to ecr
-    shell: "podman push {{ aws_account_id }}.dkr.ecr.us-east-1.amazonaws.com/{{ project_name }}:{{ project_name }}"
+    shell: "podman push {{ aws_account_id }}.dkr.ecr.us-east-1.amazonaws.com/{{ project_name }}:latest"
   - name: update ecr repo variable for terraform
     lineinfile:
       path: "./terraform/myvars.tfvars"

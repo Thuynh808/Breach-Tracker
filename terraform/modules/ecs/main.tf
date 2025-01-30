@@ -37,7 +37,7 @@ resource "aws_ecs_task_definition" "bt_task" {
   container_definitions = jsonencode([
     {
       name      = "app-container"
-      image     = "${data.aws_ecr_image.service_image.image_uri}:latest"
+      image     = data.aws_ecr_image.service_image.image_uri
       cpu       = 256
       memory    = 512
       essential = true
