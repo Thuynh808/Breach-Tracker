@@ -5,8 +5,8 @@ resource "aws_security_group" "ecs_sg" {
   vpc_id      = var.vpc_id
 
   ingress {
-    from_port       = 80
-    to_port         = 80
+    from_port       = 8080
+    to_port         = 8080
     protocol        = "tcp"
     security_groups = [var.alb_security_group_id] # Restrict to ALB security group
   }
@@ -70,7 +70,7 @@ resource "aws_ecs_service" "bt_service" {
   load_balancer {
     target_group_arn = var.alb_target_group_arn
     container_name   = "app-container"
-    container_port   = 80
+    container_port   = 8080
   }
 }
 

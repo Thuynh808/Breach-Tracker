@@ -21,7 +21,6 @@ module "alb" {
   project_name   = var.project_name
   vpc_id         = module.vpc.vpc_id
   private_subnet = module.vpc.private_subnet_id
-  allowed_cidrs  = var.allowed_cidrs
 }
 
 module "ecs" {
@@ -38,8 +37,10 @@ module "ecs" {
 module "api_gateway" {
   source                = "./modules/api_gateway"
   project_name          = var.project_name
-  alb_dns_name          = module.alb.alb_dns_name
-  alb_security_group_id = module.alb.alb_security_group_id
+  vpc_id                = module.vpc.vpc_id
+  alb_listener_arn      = module.alb.alb_listener_arn
+  alb_security_group_id = [module.alb.alb_security_group_id]
   private_subnet_id     = module.vpc.private_subnet_id
+  allowed_cidrs         = var.allowed_cidrs
 }
 

@@ -4,9 +4,33 @@ resource "aws_apigatewayv2_api" "bt_api" {
   protocol_type = "HTTP"
 }
 
+resource "aws_security_group" "vpc_link_sg" {
+  name        = "${var.project_name}-vpc-link-sg"
+  description = "Allow HTTP traffic to the vpc-link"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = var.allowed_cidrs # api gateway cidr
+  }
+
+  egress {
+    from_port       = 80
+    to_port         = 80
+    protocol        = "tcp"
+    security_groups = var.alb_security_group_id
+  }
+
+  tags = {
+    Name = "${var.project_name}-vpc-link-sg"
+  }
+}
+
 resource "aws_apigatewayv2_vpc_link" "bt_vpc_link" {
   name               = "${var.project_name}-vpc-link"
-  security_group_ids = [var.alb_security_group_id]
+  security_group_ids = var.alb_security_group_id
   subnet_ids         = var.private_subnet_id
 
   tags = {
@@ -19,12 +43,13 @@ resource "aws_apigatewayv2_integration" "bt_integration" {
   integration_type   = "HTTP_PROXY"
   integration_method = "ANY"
   connection_type    = "VPC_LINK"
-  integration_uri    = "http://${var.alb_dns_name}/{proxy+}"
+  connection_id      = aws_apigatewayv2_vpc_link.bt_vpc_link.id
+  integration_uri    = var.alb_listener_arn
 }
 
 resource "aws_apigatewayv2_route" "bt_route" {
   api_id    = aws_apigatewayv2_api.bt_api.id
-  route_key = "ANY /example/{proxy+}"
+  route_key = "ANY /breaches/{proxy+}"
 
   target = "integrations/${aws_apigatewayv2_integration.bt_integration.id}"
 }

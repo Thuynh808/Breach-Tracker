@@ -63,6 +63,11 @@ output "ecs_security_group_id" {
   description = "security group for ecs"
 }
 
+output "alb_listener_arn" {
+  value       = module.alb.alb_listener_arn
+  description = "alb listener arn"
+}
+
 output "ecr_image_uri" {
   value       = module.ecs.ecr_image_uri
   description = "ecr image url"

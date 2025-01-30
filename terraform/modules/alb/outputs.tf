@@ -18,3 +18,7 @@ output "alb_target_group_arn" {
   description = "ARN of the ALB target group for ECS"
 }
 
+output "alb_listener_arn" {
+  value       = aws_lb_listener.http_listener.arn
+  description = "alb listener arn"
+}
