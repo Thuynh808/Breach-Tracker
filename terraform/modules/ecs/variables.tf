@@ -8,7 +8,12 @@ variable "vpc_id" {
 }
 
 # Subnets for ECS service
-variable "private_subnet" {
+variable "private_subnet_cidr" {
+  description = "List of subnets where ECS tasks will be deployed"
+  type        = list(string)
+}
+
+variable "private_subnet_id" {
   description = "List of subnets where ECS tasks will be deployed"
   type        = list(string)
 }

@@ -4,28 +4,35 @@ resource "aws_apigatewayv2_api" "bt_api" {
   protocol_type = "HTTP"
 }
 
+data "aws_ip_ranges" "api_gateway" {
+  services = ["API_GATEWAY"]
+  regions  = ["us-east-1"]
+}
+
 resource "aws_security_group" "vpc_link_sg" {
   name        = "${var.project_name}-vpc-link-sg"
   description = "Allow HTTP traffic to the vpc-link"
   vpc_id      = var.vpc_id
+}
 
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = var.allowed_cidrs # api gateway cidr
-  }
+resource "aws_vpc_security_group_ingress_rule" "vpc_link_sg" {
+  for_each = toset(data.aws_ip_ranges.api_gateway.cidr_blocks)
 
-  egress {
-    from_port       = 80
-    to_port         = 80
-    protocol        = "tcp"
-    security_groups = var.alb_security_group_id
-  }
+  security_group_id = aws_security_group.vpc_link_sg.id
+  cidr_ipv4         = each.value
+  from_port         = 80
+  to_port           = 80
+  ip_protocol       = "tcp"
 
   tags = {
-    Name = "${var.project_name}-vpc-link-sg"
+    Name = "API Gateway Ingress Rule"
   }
+}
+
+resource "aws_vpc_security_group_egress_rule" "vpc_link_sg" {
+  security_group_id = aws_security_group.vpc_link_sg.id
+  cidr_ipv4         = "0.0.0.0/0"
+  ip_protocol       = "-1" # semantically equivalent to all ports
 }
 
 resource "aws_apigatewayv2_vpc_link" "bt_vpc_link" {

@@ -20,7 +20,3 @@ variable "private_subnet_id" {
   type        = list(string)
 }
 
-variable "allowed_cidrs" {
-  description = "allowed cidr blocks of public api endpoints"
-  type        = list(string)
-}

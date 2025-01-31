@@ -3,24 +3,26 @@ resource "aws_security_group" "ecs_sg" {
   name        = "${var.project_name}-ecs-sg"
   description = "Allow traffic to ECS tasks from ALB"
   vpc_id      = var.vpc_id
+}
 
-  ingress {
-    from_port       = 8080
-    to_port         = 8080
-    protocol        = "tcp"
-    security_groups = [var.alb_security_group_id] # Restrict to ALB security group
-  }
+resource "aws_vpc_security_group_ingress_rule" "ecs_sg" {
+  for_each = toset(var.private_subnet_cidr)
 
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+  security_group_id = aws_security_group.ecs_sg.id
+  cidr_ipv4         = each.value
+  from_port         = 80
+  to_port           = 80
+  ip_protocol       = "tcp"
 
   tags = {
-    Name = "${var.project_name}-ecs-sg"
+    Name = "ECS Ingress Rule for Private Subnets"
   }
+}
+
+resource "aws_vpc_security_group_egress_rule" "vpc_link_sg" {
+  security_group_id = aws_security_group.ecs_sg.id
+  cidr_ipv4         = "0.0.0.0/0"
+  ip_protocol       = "-1" # semantically equivalent to all ports
 }
 
 data "aws_ecr_image" "service_image" {
@@ -43,8 +45,8 @@ resource "aws_ecs_task_definition" "bt_task" {
       essential = true
       portMappings = [
         {
-          containerPort = 8080
-          hostPort      = 8080
+          containerPort = 80
+          hostPort      = 80
         }
       ]
     }
@@ -63,14 +65,14 @@ resource "aws_ecs_service" "bt_service" {
   desired_count   = 2
   launch_type     = "FARGATE"
   network_configuration {
-    subnets          = var.private_subnet
+    subnets          = var.private_subnet_id
     security_groups  = [aws_security_group.ecs_sg.id]
     assign_public_ip = false
   }
   load_balancer {
     target_group_arn = var.alb_target_group_arn
     container_name   = "app-container"
-    container_port   = 8080
+    container_port   = 80
   }
 }
 

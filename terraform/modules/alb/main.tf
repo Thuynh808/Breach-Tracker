@@ -36,13 +36,13 @@ resource "aws_lb" "alb" {
 
 resource "aws_lb_target_group" "ecs_tg" {
   name        = "${var.project_name}-ecs-tg"
-  port        = 8080
+  port        = 80
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
   target_type = "ip"
 
   health_check {
-    path                = "/health"
+    path                = "/breaches"
     interval            = 30
     timeout             = 5
     healthy_threshold   = 2
