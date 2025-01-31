@@ -22,11 +22,6 @@ variable "availability_zones" {
   description = "availability_zones"
 }
 
-variable "allowed_cidrs" {
-  description = "aws api_gateway public cidrs"
-  type        = list(string)
-}
-
 variable "ecr_repository_name" {
   description = "name of ecr container image repo"
 }

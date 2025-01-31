@@ -12,7 +12,7 @@ variable "alb_listener_arn" {
 
 variable "alb_security_group_id" {
   description = "security group id of alb"
-  type        = list(string)
+  type        = string
 }
 
 variable "private_subnet_id" {

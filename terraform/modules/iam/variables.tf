@@ -7,3 +7,6 @@ variable "ecs_task_execution_policy" {
   default     = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
+variable "alb_arn" {
+  description = "arn of alb"
+}
