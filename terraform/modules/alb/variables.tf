@@ -19,3 +19,8 @@ variable "private_subnet_cidr" {
   description = "List of private subnets for the ALB"
   type        = list(string)
 }
+
+variable "ecs_security_group_id" {
+  description = "security group id for ecs and alb"
+  type        = string
+}

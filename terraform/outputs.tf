@@ -43,11 +43,6 @@ output "alb_target_group_arn" {
   description = "target group arn for ecs"
 }
 
-output "alb_security_group_id" {
-  value       = module.alb.alb_security_group_id
-  description = "security group for alb"
-}
-
 output "alb_dns_name" {
   value       = module.alb.alb_dns_name
   description = "dns name for alb"

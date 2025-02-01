@@ -15,7 +15,7 @@ resource "aws_security_group" "vpc_link_sg" {
   vpc_id      = var.vpc_id
 }
 
-resource "aws_vpc_security_group_ingress_rule" "vpc_link_sg" {
+resource "aws_vpc_security_group_ingress_rule" "http_rule" {
   for_each = toset(data.aws_ip_ranges.api_gateway.cidr_blocks)
 
   security_group_id = aws_security_group.vpc_link_sg.id
@@ -23,10 +23,16 @@ resource "aws_vpc_security_group_ingress_rule" "vpc_link_sg" {
   from_port         = 80
   to_port           = 80
   ip_protocol       = "tcp"
+}
 
-  tags = {
-    Name = "API Gateway Ingress Rule"
-  }
+resource "aws_vpc_security_group_ingress_rule" "https_rule" {
+  for_each = toset(data.aws_ip_ranges.api_gateway.cidr_blocks)
+
+  security_group_id = aws_security_group.vpc_link_sg.id
+  cidr_ipv4         = each.value
+  from_port         = 443
+  to_port           = 443
+  ip_protocol       = "tcp"
 }
 
 resource "aws_vpc_security_group_egress_rule" "vpc_link_sg" {
@@ -56,14 +62,14 @@ resource "aws_apigatewayv2_integration" "bt_integration" {
 
 resource "aws_apigatewayv2_route" "bt_route" {
   api_id    = aws_apigatewayv2_api.bt_api.id
-  route_key = "GET /breaches"
+  route_key = "GET /{proxy+}"
 
   target = "integrations/${aws_apigatewayv2_integration.bt_integration.id}"
 }
 
 resource "aws_apigatewayv2_stage" "bt_stage" {
   api_id = aws_apigatewayv2_api.bt_api.id
-  name   = "dev"
+  name   = "$default"
 }
 
 resource "aws_apigatewayv2_deployment" "bt_deployment" {

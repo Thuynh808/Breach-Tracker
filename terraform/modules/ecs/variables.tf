@@ -18,11 +18,6 @@ variable "private_subnet_id" {
   type        = list(string)
 }
 
-# Security groups for ECS tasks
-variable "alb_security_group_id" {
-  description = "List of security groups for ECS tasks"
-}
-
 # ALB target group ARN for the ECS service
 variable "alb_target_group_arn" {
   description = "ARN of the target group for ALB to route traffic to ECS tasks"

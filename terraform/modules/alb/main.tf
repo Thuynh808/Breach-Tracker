@@ -1,36 +1,7 @@
-resource "aws_security_group" "alb_sg" {
-  name        = "${var.project_name}-alb-sg"
-  description = "Allow HTTP traffic to alb"
-  vpc_id      = var.vpc_id
-}
-
-resource "aws_vpc_security_group_ingress_rule" "alb_sg" {
-  security_group_id = aws_security_group.alb_sg.id
-  cidr_ipv4         = var.vpc_cidr
-  from_port         = 80
-  to_port           = 80
-  ip_protocol       = "tcp"
-
-  tags = {
-    Name = "alb ingress rule"
-  }
-}
-
-resource "aws_vpc_security_group_egress_rule" "alb_sg" {
-  security_group_id = aws_security_group.alb_sg.id
-  cidr_ipv4         = "0.0.0.0/0"
-  ip_protocol       = "-1" # semantically equivalent to all ports
-
-  tags = {
-    Name = "${var.project_name}-alb-sg"
-  }
-}
-
-
 resource "aws_lb" "alb" {
   name                       = "${var.project_name}-alb"
   internal                   = true
-  security_groups            = [aws_security_group.alb_sg.id]
+  security_groups            = [var.ecs_security_group_id]
   subnets                    = var.private_subnet_id
   enable_deletion_protection = false
 

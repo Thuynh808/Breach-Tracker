@@ -1,22 +1,27 @@
 # ECS Security Group
 resource "aws_security_group" "ecs_sg" {
   name        = "${var.project_name}-ecs-sg"
-  description = "Allow traffic to ECS tasks from ALB"
+  description = "Allow traffic for ECS tasks and ALB"
   vpc_id      = var.vpc_id
+  tags = {
+    Name = "${var.project_name}-ecs-sg"
+  }
 }
 
-resource "aws_vpc_security_group_ingress_rule" "ecs_sg" {
-  for_each = toset(var.private_subnet_cidr)
-
+resource "aws_vpc_security_group_ingress_rule" "http" {
   security_group_id = aws_security_group.ecs_sg.id
-  cidr_ipv4         = each.value
+  cidr_ipv4         = "0.0.0.0/0"
   from_port         = 80
   to_port           = 80
   ip_protocol       = "tcp"
+}
 
-  tags = {
-    Name = "ECS Ingress Rule for Private Subnets"
-  }
+resource "aws_vpc_security_group_ingress_rule" "https" {
+  security_group_id = aws_security_group.ecs_sg.id
+  cidr_ipv4         = "0.0.0.0/0"
+  from_port         = 443
+  to_port           = 443
+  ip_protocol       = "tcp"
 }
 
 resource "aws_vpc_security_group_egress_rule" "ecs_sg" {
@@ -43,7 +48,7 @@ resource "aws_ecs_task_definition" "bt_task" {
   family = "${var.project_name}-task"
   container_definitions = jsonencode([
     {
-      name      = "app-container"
+      name      = "breach_container"
       image     = data.aws_ecr_image.service_image.image_uri
       cpu       = 256
       memory    = 512
@@ -80,7 +85,7 @@ resource "aws_ecs_service" "bt_service" {
   force_new_deployment   = true
   load_balancer {
     target_group_arn = var.alb_target_group_arn
-    container_name   = "app-container"
+    container_name   = "breach_container"
     container_port   = 80
   }
 }
