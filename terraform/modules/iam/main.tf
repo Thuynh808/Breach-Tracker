@@ -79,6 +79,7 @@ resource "aws_iam_policy" "ecs_task_policy" {
       {
         Effect = "Allow",
         Action = [
+          "ecs:*",
           "ec2:DescribeNetworkInterfaces",
           "ec2:CreateNetworkInterface",
           "ec2:DeleteNetworkInterface"

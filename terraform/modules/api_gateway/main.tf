@@ -56,7 +56,7 @@ resource "aws_apigatewayv2_integration" "bt_integration" {
 
 resource "aws_apigatewayv2_route" "bt_route" {
   api_id    = aws_apigatewayv2_api.bt_api.id
-  route_key = "ANY /{proxy+}"
+  route_key = "GET /breaches"
 
   target = "integrations/${aws_apigatewayv2_integration.bt_integration.id}"
 }

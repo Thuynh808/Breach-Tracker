@@ -21,6 +21,7 @@ module "alb" {
   source              = "./modules/alb"
   project_name        = var.project_name
   vpc_id              = module.vpc.vpc_id
+  vpc_cidr            = var.vpc_cidr
   private_subnet_cidr = var.private_subnet_cidr
   private_subnet_id   = module.vpc.private_subnet_id
 }
@@ -34,6 +35,7 @@ module "ecs" {
   alb_target_group_arn        = module.alb.alb_target_group_arn
   alb_security_group_id       = module.alb.alb_security_group_id
   ecs_task_execution_role_arn = module.iam.ecs_task_execution_role_arn
+  ecs_task_role_arn           = module.iam.ecs_task_role_arn
   ecr_repository_name         = var.ecr_repository_name
 }
 

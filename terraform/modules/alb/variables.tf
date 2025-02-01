@@ -6,6 +6,10 @@ variable "vpc_id" {
   description = "VPC ID for the ALB"
 }
 
+variable "vpc_cidr" {
+  description = "vpc cidr"
+}
+
 variable "private_subnet_id" {
   description = "private subnet ids for the ALB"
   type        = list(string)
