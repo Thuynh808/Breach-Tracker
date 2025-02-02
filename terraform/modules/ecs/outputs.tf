@@ -26,3 +26,8 @@ output "ecr_image_uri" {
   value       = data.aws_ecr_image.service_image.image_uri
   description = "image uri of ecr container image"
 }
+
+output "ecs_service" {
+  value       = aws_ecs_service.bt_service
+  description = "ecs service output"
+}

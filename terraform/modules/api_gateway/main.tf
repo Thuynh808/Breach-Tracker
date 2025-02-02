@@ -68,8 +68,15 @@ resource "aws_apigatewayv2_route" "bt_route" {
 }
 
 resource "aws_apigatewayv2_stage" "bt_stage" {
-  api_id = aws_apigatewayv2_api.bt_api.id
-  name   = "$default"
+  api_id      = aws_apigatewayv2_api.bt_api.id
+  name        = "$default"
+  auto_deploy = true
+
+  depends_on = [
+    var.ecs_service,
+    aws_apigatewayv2_route.bt_route,
+    aws_apigatewayv2_integration.bt_integration
+  ]
 }
 
 resource "aws_apigatewayv2_deployment" "bt_deployment" {
@@ -83,6 +90,7 @@ resource "aws_apigatewayv2_deployment" "bt_deployment" {
   }
 
   depends_on = [
+    var.ecs_service,
     aws_apigatewayv2_route.bt_route,
     aws_apigatewayv2_integration.bt_integration,
     aws_apigatewayv2_stage.bt_stage

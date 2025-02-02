@@ -15,3 +15,6 @@ variable "private_subnet_id" {
   type        = list(string)
 }
 
+variable "ecs_service" {
+  description = "confirm ecs service before deploying"
+}

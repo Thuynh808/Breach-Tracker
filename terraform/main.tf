@@ -45,5 +45,6 @@ module "api_gateway" {
   vpc_id            = module.vpc.vpc_id
   alb_listener_arn  = module.alb.alb_listener_arn
   private_subnet_id = module.vpc.private_subnet_id
+  ecs_service       = module.ecs.ecs_service
 }
 
