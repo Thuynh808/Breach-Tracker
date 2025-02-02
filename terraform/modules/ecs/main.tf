@@ -55,7 +55,7 @@ resource "aws_ecs_task_definition" "bt_task" {
       essential = true
       portMappings = [
         {
-          containerPort = 80
+          containerPort = 8080
           hostPort      = 80
         }
       ]
@@ -84,7 +84,7 @@ resource "aws_ecs_service" "bt_service" {
   load_balancer {
     target_group_arn = var.alb_target_group_arn
     container_name   = "breach_container"
-    container_port   = 80
+    container_port   = 8080
   }
   enable_execute_command = true
   force_new_deployment   = true

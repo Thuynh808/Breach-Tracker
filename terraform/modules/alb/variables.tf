@@ -1,13 +1,16 @@
 variable "project_name" {
-  description = "Name of the project for tagging resources"
+  description = "name of the project"
+  type        = string
 }
 
 variable "vpc_id" {
-  description = "VPC ID for the ALB"
+  description = "vpc id"
+  type        = string
 }
 
 variable "vpc_cidr" {
   description = "vpc cidr"
+  type        = string
 }
 
 variable "private_subnet_id" {

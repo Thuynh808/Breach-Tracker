@@ -5,22 +5,21 @@ variable "project_name" {
 
 variable "vpc_id" {
   description = "vpc id for ecs services"
+  type        = string
 }
 
-# Subnets for ECS service
 variable "private_subnet_cidr" {
-  description = "List of subnets where ECS tasks will be deployed"
+  description = "private subnet cidrs"
   type        = list(string)
 }
 
 variable "private_subnet_id" {
-  description = "List of subnets where ECS tasks will be deployed"
+  description = "private subnet ids"
   type        = list(string)
 }
 
-# ALB target group ARN for the ECS service
 variable "alb_target_group_arn" {
-  description = "ARN of the target group for ALB to route traffic to ECS tasks"
+  description = "ARN of the target group for alb"
   type        = string
 }
 
