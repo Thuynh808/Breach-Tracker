@@ -1,26 +1,16 @@
-![CVEDataLake](https://i.imgur.com/eaeJcP2.png) 
+![CVEDataLake]() 
 
 ## Project Overview
 
-CVEDataLake is a cloud-based project that automates the ingestion, storage, and querying of the Common Vulnerabilities and Exposures (CVE) dataset. It uses AWS services like S3, Glue, and Athena, along with Infrastructure as Code (IaC) through Ansible, to streamline deployment and enable efficient data analysis.
+
 
 ## Components
 
-- **Rocky Linux**: Provides a stable and secure environment for running the automation and orchestration workflows
-- **S3**: Serves as the storage solution for fetched CVE data from the NVD
-- **AWS Glue**: Used to define schemas and configure Glue tables for organizing and structuring the data
-- **AWS Athena**: Provides SQL querying capabilities to analyze the data and generate JSON reports
-- **Ansible**: Automates the setup of infrastructure and the generation of reports for repeatability and efficiency
-- **Python**: Facilitates data fetching, processing, and integration with AWS services through scripts and libraries
+
 
 ## Use Case
 
-CVEDataLake's flexibility makes it a valuable tool for Security Operations Centers (SOCs) and vulnerability management workflows. The JSON files generated from SQL queries can be used for various purposes, such as:
 
-- **Trend Analysis**: Identify patterns in vulnerabilities over time to prioritize mitigation
-- **Integration**: Incorporate JSON data into dashboards or visualization tools
-- **Automation**: Feed JSON data into automated security workflows or vulnerability scanners
-- **Custom Reports**: Generate tailored reports for compliance audits or team-specific needs
 
 ## Versions
 
@@ -48,7 +38,7 @@ CVEDataLake's flexibility makes it a valuable tool for Security Operations Cente
 ```bash
 cd
 dnf install -y git ansible-core
-git clone -b https://github.com/Thuynh808/Breach-Tracker
+git clone -b feature https://github.com/Thuynh808/Breach-Tracker
 cd Breach-Tracker
 ansible-galaxy collection install -r requirements.yaml -vv
 ```
@@ -61,7 +51,7 @@ ansible-galaxy collection install -r requirements.yaml -vv
 
 ## Define Variables
 
-**Update variables with proper values for file: `vars.yaml`**
+**Update variables with proper values for files: `vars.yaml` and `myvars.tfvars`:**
 ```bash
 vim vars.yaml
 ```
@@ -69,9 +59,17 @@ vim vars.yaml
 aws_access_key_id: "<your-access-key-id>"
 aws_secret_access_key: "<your-secret-access-key>"
 defaultregion: "us-east-1"
-bucket_name: "<your-bucket-name>"
-glue_database_name: "glue_cve_data_lake"
-glue_table_name: "cve_records"
+```
+```bash
+vim terraform/myvars.tfvars
+```
+```bash
+project_name        = "breach-tracker"
+aws_region          = "us-east-1"
+vpc_cidr            = "10.2.0.0/16"
+public_subnet_cidr  = ["10.2.22.0/24", "10.2.24.0/24"]
+private_subnet_cidr = ["10.2.23.0/24", "10.2.25.0/24"]
+availability_zones  = ["us-east-1a", "us-east-1b"]
 ```
 **Set permissions to secure file**
 ```bash
@@ -82,11 +80,14 @@ chmod 0600 vars.yaml
 
 ## Deployment
 
-**Run Playbook:**
+**Run Terraform to build our cloud infrastructure:**
 ```bash
-ansible-playbook setup_infra.yaml -vv
+cd terraform
+terraform init
+terraform apply -var-file=myvars.tfvars -auto-approve
+terraform output -json > ../tf_outputs.json
 ```
-  The `setup_infra.yaml` playbook will:
+  These commands will:
   - Install and upgrade system packages
   - Install `pip` modules with required versions
   - Download, unzip and install `AWS CLI`
