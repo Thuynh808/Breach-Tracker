@@ -84,6 +84,12 @@ output "ecs_service_name" {
 }
 
 output "api_endpoint" {
-  value       = module.api_gateway.api_endpoint
+  value       = "${module.api_gateway.api_endpoint}breaches"
   description = "url endpoint of api gateway"
 }
+
+output "vpc_link_sg_id" {
+  value       = module.api_gateway.vpc_link_sg_id
+  description = "security group id of vpc link"
+}
+

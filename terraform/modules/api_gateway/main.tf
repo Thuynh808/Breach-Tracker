@@ -11,7 +11,7 @@ data "aws_ip_ranges" "api_gateway" {
 
 resource "aws_security_group" "vpc_link_sg" {
   name        = "${var.project_name}-vpc-link-sg"
-  description = "Allow HTTP traffic to the vpc-link"
+  description = "allow HTTP traffic to the vpc-link"
   vpc_id      = var.vpc_id
 }
 
@@ -38,7 +38,7 @@ resource "aws_vpc_security_group_ingress_rule" "https_rule" {
 resource "aws_vpc_security_group_egress_rule" "vpc_link_sg" {
   security_group_id = aws_security_group.vpc_link_sg.id
   cidr_ipv4         = "0.0.0.0/0"
-  ip_protocol       = "-1" # semantically equivalent to all ports
+  ip_protocol       = "-1"
 }
 
 resource "aws_apigatewayv2_vpc_link" "bt_vpc_link" {

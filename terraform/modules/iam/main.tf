@@ -20,7 +20,7 @@ resource "aws_iam_role" "ecs_task_execution_role" {
   }
 }
 
-# Attach AWS Managed Policy for ECS Task Execution (IAM Best Practice)
+# Attach AWS Managed Policy for ECS Task Execution 
 resource "aws_iam_role_policy_attachment" "ecs_task_execution_attach" {
   role       = aws_iam_role.ecs_task_execution_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
@@ -48,30 +48,13 @@ resource "aws_iam_role" "ecs_task_role" {
   }
 }
 
-# CloudWatch Log Group for ECS Task Logs
-resource "aws_cloudwatch_log_group" "ecs_log_group" {
-  name              = "/aws/ecs/${var.project_name}"
-  retention_in_days = 30
-
-  tags = {
-    Name = "${var.project_name}-ecs-log-group"
-  }
-}
-
-# Custom IAM Policy for ECS Task Role (Granular Permissions)
+# Custom IAM Policy for ECS Task Role
 resource "aws_iam_policy" "ecs_task_policy" {
-  name        = "${var.project_name}-ecs-task-policy"
-  description = "Least Privilege Policy for ECS Task"
+  name = "${var.project_name}-ecs-task-policy"
 
   policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
-      # Logging to CloudWatch
-      {
-        Effect   = "Allow",
-        Action   = ["logs:CreateLogStream", "logs:PutLogEvents"],
-        Resource = "${aws_cloudwatch_log_group.ecs_log_group.arn}:log-stream:/aws/ecs/${var.project_name}/*"
-      },
       # Allow ECS Task to Describe Network Interfaces (Necessary for ENI-based Networking)
       {
         Effect   = "Allow",
@@ -88,7 +71,7 @@ resource "aws_iam_role_policy_attachment" "ecs_task_role_attach" {
   policy_arn = aws_iam_policy.ecs_task_policy.arn
 }
 
-# API Gateway Execution Role - For API Gateway to Invoke ALB
+# API Gateway Execution Role - for API Gateway to invoke ALB
 resource "aws_iam_role" "api_gateway_execution_role" {
   name = "${var.project_name}-api-gateway-execution-role"
 
@@ -110,16 +93,6 @@ resource "aws_iam_role" "api_gateway_execution_role" {
   }
 }
 
-# CloudWatch Log Group for API Gateway
-resource "aws_cloudwatch_log_group" "api_gateway_log_group" {
-  name              = "/aws/apigateway/${var.project_name}"
-  retention_in_days = 30
-
-  tags = {
-    Name = "${var.project_name}-api-gateway-log-group"
-  }
-}
-
 # Custom IAM Policy for API Gateway (Restricted to ALB)
 resource "aws_iam_policy" "api_gateway_policy" {
   name        = "${var.project_name}-api-gateway-policy"
@@ -138,12 +111,6 @@ resource "aws_iam_policy" "api_gateway_policy" {
           "elasticloadbalancing:DescribeTargetHealth"
         ],
         Resource = var.alb_arn
-      },
-      # API Gateway CloudWatch Logging
-      {
-        Effect   = "Allow",
-        Action   = ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"],
-        Resource = "${aws_cloudwatch_log_group.api_gateway_log_group.arn}:*"
       }
     ]
   })
