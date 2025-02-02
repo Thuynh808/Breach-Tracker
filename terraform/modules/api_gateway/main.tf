@@ -75,8 +75,17 @@ resource "aws_apigatewayv2_stage" "bt_stage" {
 resource "aws_apigatewayv2_deployment" "bt_deployment" {
   api_id = aws_apigatewayv2_api.bt_api.id
 
+  triggers = {
+    redeployment = sha1(join(",", tolist([
+      jsonencode(aws_apigatewayv2_integration.bt_integration),
+      jsonencode(aws_apigatewayv2_route.bt_route)
+    ])))
+  }
+
   depends_on = [
-    aws_apigatewayv2_route.bt_route
+    aws_apigatewayv2_route.bt_route,
+    aws_apigatewayv2_integration.bt_integration,
+    aws_apigatewayv2_stage.bt_stage
   ]
 
   lifecycle {

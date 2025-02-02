@@ -81,11 +81,12 @@ resource "aws_ecs_service" "bt_service" {
     security_groups  = [aws_security_group.ecs_sg.id]
     assign_public_ip = false
   }
-  enable_execute_command = true
-  force_new_deployment   = true
   load_balancer {
     target_group_arn = var.alb_target_group_arn
     container_name   = "breach_container"
     container_port   = 80
   }
+  enable_execute_command = true
+  force_new_deployment   = true
+  wait_for_steady_state  = true
 }

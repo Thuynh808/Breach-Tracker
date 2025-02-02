@@ -1,4 +1,4 @@
-# ECS Task Execution Role
+# ECS Task Execution Role - For pulling images & sending logs
 resource "aws_iam_role" "ecs_task_execution_role" {
   name = "${var.project_name}-ecs-task-execution-role"
 
@@ -6,8 +6,8 @@ resource "aws_iam_role" "ecs_task_execution_role" {
     Version = "2012-10-17",
     Statement = [
       {
-        Action = "sts:AssumeRole",
         Effect = "Allow",
+        Action = "sts:AssumeRole",
         Principal = {
           Service = "ecs-tasks.amazonaws.com"
         }
@@ -20,13 +20,13 @@ resource "aws_iam_role" "ecs_task_execution_role" {
   }
 }
 
-# Attach the ECS Task Execution Role Policy
+# Attach AWS Managed Policy for ECS Task Execution (IAM Best Practice)
 resource "aws_iam_role_policy_attachment" "ecs_task_execution_attach" {
   role       = aws_iam_role.ecs_task_execution_role.name
-  policy_arn = var.ecs_task_execution_policy
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
-# ECS Task Role (Allows ECS tasks to make API requests or access AWS services)
+# ECS Task Role - For ECS Tasks to Access APIs & Logging
 resource "aws_iam_role" "ecs_task_role" {
   name = "${var.project_name}-ecs-task-role"
 
@@ -34,8 +34,8 @@ resource "aws_iam_role" "ecs_task_role" {
     Version = "2012-10-17",
     Statement = [
       {
-        Action = "sts:AssumeRole",
         Effect = "Allow",
+        Action = "sts:AssumeRole",
         Principal = {
           Service = "ecs-tasks.amazonaws.com"
         }
@@ -48,42 +48,34 @@ resource "aws_iam_role" "ecs_task_role" {
   }
 }
 
-# create cloudwatch log group for ecs task logs
+# CloudWatch Log Group for ECS Task Logs
 resource "aws_cloudwatch_log_group" "ecs_log_group" {
   name              = "/aws/ecs/${var.project_name}"
   retention_in_days = 30
+
   tags = {
     Name = "${var.project_name}-ecs-log-group"
   }
 }
 
-# Custom IAM Policy for ECS Task Role (Adjust permissions as needed)
+# Custom IAM Policy for ECS Task Role (Granular Permissions)
 resource "aws_iam_policy" "ecs_task_policy" {
   name        = "${var.project_name}-ecs-task-policy"
-  description = "Policy for ECS task to call Have I Been Pwned API and store logs/data"
+  description = "Least Privilege Policy for ECS Task"
 
   policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
-      # Allow ECS tasks to make requests to external APIs (HIBP)
+      # Logging to CloudWatch
       {
-        Effect = "Allow",
-        Action = [
-          "logs:CreateLogStream",
-          "logs:PutLogEvents"
-        ],
+        Effect   = "Allow",
+        Action   = ["logs:CreateLogStream", "logs:PutLogEvents"],
         Resource = "${aws_cloudwatch_log_group.ecs_log_group.arn}:log-stream:/aws/ecs/${var.project_name}/*"
       },
-
-      # Allow ECS to make outgoing API requests (needed for API calls via NAT Gateway)
+      # Allow ECS Task to Describe Network Interfaces (Necessary for ENI-based Networking)
       {
-        Effect = "Allow",
-        Action = [
-          "ecs:*",
-          "ec2:DescribeNetworkInterfaces",
-          "ec2:CreateNetworkInterface",
-          "ec2:DeleteNetworkInterface"
-        ],
+        Effect   = "Allow",
+        Action   = ["ec2:DescribeNetworkInterfaces"],
         Resource = "*"
       }
     ]
@@ -96,8 +88,7 @@ resource "aws_iam_role_policy_attachment" "ecs_task_role_attach" {
   policy_arn = aws_iam_policy.ecs_task_policy.arn
 }
 
-
-# API Gateway Execution Role
+# API Gateway Execution Role - For API Gateway to Invoke ALB
 resource "aws_iam_role" "api_gateway_execution_role" {
   name = "${var.project_name}-api-gateway-execution-role"
 
@@ -106,10 +97,10 @@ resource "aws_iam_role" "api_gateway_execution_role" {
     Statement = [
       {
         Effect = "Allow",
+        Action = "sts:AssumeRole",
         Principal = {
           Service = "apigateway.amazonaws.com"
-        },
-        Action = "sts:AssumeRole"
+        }
       }
     ]
   })
@@ -119,46 +110,39 @@ resource "aws_iam_role" "api_gateway_execution_role" {
   }
 }
 
-# Create CloudWatch Log Group for API Gateway Logs
+# CloudWatch Log Group for API Gateway
 resource "aws_cloudwatch_log_group" "api_gateway_log_group" {
   name              = "/aws/apigateway/${var.project_name}"
   retention_in_days = 30
+
   tags = {
     Name = "${var.project_name}-api-gateway-log-group"
   }
 }
 
-
-# Custom IAM Policy for API Gateway
+# Custom IAM Policy for API Gateway (Restricted to ALB)
 resource "aws_iam_policy" "api_gateway_policy" {
   name        = "${var.project_name}-api-gateway-policy"
-  description = "API Gateway integration with ALB"
+  description = "API Gateway Permissions for ALB"
 
   policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
-      # Allow API Gateway to interact with ALB
+      # API Gateway Access to ALB
       {
         Effect = "Allow",
         Action = [
           "elasticloadbalancing:DescribeLoadBalancers",
           "elasticloadbalancing:DescribeListeners",
           "elasticloadbalancing:DescribeTargetGroups",
-          "elasticloadbalancing:DescribeTargetHealth",
-          "elasticloadbalancing:RegisterTargets",
-          "elasticloadbalancing:DeregisterTargets"
+          "elasticloadbalancing:DescribeTargetHealth"
         ],
         Resource = var.alb_arn
       },
-
-      # Allow API Gateway to write logs (optional)
+      # API Gateway CloudWatch Logging
       {
-        Effect = "Allow",
-        Action = [
-          "logs:CreateLogGroup",
-          "logs:CreateLogStream",
-          "logs:PutLogEvents"
-        ],
+        Effect   = "Allow",
+        Action   = ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"],
         Resource = "${aws_cloudwatch_log_group.api_gateway_log_group.arn}:*"
       }
     ]
