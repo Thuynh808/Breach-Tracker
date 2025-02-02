@@ -1,0 +1,43 @@
+---
+- name: setup s3
+  hosts: localhost
+  vars_files: vars.yaml
+  tasks:
+  - name: set facts for terraform outputs
+    set_fact:
+      tf_outputs: "{{ lookup('file', 'tf_outputs.json') | from_json }}"
+  - name: create bucket
+    amazon.aws.s3_bucket:
+      name: "{{ project_name }}-s3"
+      state: present
+  - name: delete public access block for s3
+    shell: "aws s3api delete-public-access-block --bucket {{ project_name }}-s3"
+  - name: update bucket policy
+    amazon.aws.s3_bucket:
+      name: "{{ project_name }}-s3"
+      policy: "{{ lookup('template','./s3_policy.json.j2') }}"
+      state: present
+  - name: upload index.html
+    amazon.aws.s3_object:
+      bucket: "{{ project_name }}-s3"
+      object: index.html
+      content: "{{ lookup('template','./index.html.j2') }}"
+      metadata:
+        Content-Type: text/html
+      mode: put
+  - name: configure s3 static website
+    community.aws.s3_website:
+      name: "{{ project_name }}-s3"
+      state: present
+  - name: edit cors for s3
+    community.aws.s3_cors:
+      name: "{{ project_name }}-s3"
+      state: present
+      rules:
+        - allowed_origins:
+            - "*"
+          allowed_methods:
+            - GET
+          allowed_headers:
+            - "*"
+          max_age_seconds: 3000
