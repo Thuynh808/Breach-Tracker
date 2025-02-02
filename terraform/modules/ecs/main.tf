@@ -19,8 +19,8 @@ resource "aws_vpc_security_group_ingress_rule" "http" {
 resource "aws_vpc_security_group_ingress_rule" "https" {
   security_group_id = aws_security_group.ecs_sg.id
   cidr_ipv4         = "0.0.0.0/0"
-  from_port         = 443
-  to_port           = 443
+  from_port         = 8080
+  to_port           = 8080
   ip_protocol       = "tcp"
 }
 
@@ -56,7 +56,7 @@ resource "aws_ecs_task_definition" "bt_task" {
       portMappings = [
         {
           containerPort = 8080
-          hostPort      = 80
+          hostPort      = 8080
         }
       ]
     }
