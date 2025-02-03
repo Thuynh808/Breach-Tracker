@@ -15,3 +15,6 @@ cd terraform
 terraform destroy -var-file=myvars.tfvars -auto-approve
 
 aws ecr delete-repository --repository-name "breach-tracker" --force
+if [ $? -eq 0 ]; then
+    echo "ECR repository successfully deleted"
+fi
