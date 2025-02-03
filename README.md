@@ -100,11 +100,7 @@ cd terraform
 terraform init
 terraform apply -var-file=myvars.tfvars -auto-approve
 terraform output -json > ../tf_outputs.json
-cd ..
-ansible-playbook s3.yaml -vv
 ```
-  These commands will:
-
 
 <details close>
   <summary> <h4>Image Results</h4> </summary>
@@ -123,6 +119,13 @@ ansible-playbook s3.yaml -vv
 
 ---
 <br>
+
+**Bonus: Ansible playbook to setup `s3` bucket and host a static website to populate a table with our breach data**
+
+```bash
+cd ../
+ansible-playbook s3.yaml -vv
+```
 
 **Confirm Successful Execution:**
 
