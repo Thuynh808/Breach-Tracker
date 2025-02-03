@@ -21,7 +21,7 @@
 | Ansible           | 2.15     | Botocore          | 1.31.0   |
 | Community.general | 9.0      | Boto3             | 1.28.0   |
 | Amazon.aws        | 9.0      | Requests          | 2.28.2   | 
-
+| Terraform         | 1.10.5   | Podman-Docker     | 5.2.2    | 
  
 
 ## Prerequisites
