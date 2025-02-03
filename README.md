@@ -56,6 +56,7 @@ ansible-galaxy collection install -r requirements.yaml -vv
 vim vars.yaml
 ```
 ```bash
+aws_account_id: "<your-account-id>"
 aws_access_key_id: "<your-access-key-id>"
 aws_secret_access_key: "<your-secret-access-key>"
 defaultregion: "us-east-1"
