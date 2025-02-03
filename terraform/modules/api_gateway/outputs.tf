@@ -7,3 +7,8 @@ output "vpc_link_sg_id" {
   value       = aws_security_group.vpc_link_sg.id
   description = "security group id of vpc link"
 }
+
+output "api_id" {
+  value       = aws_apigatewayv2_api.bt_api.id
+  description = "id of api"
+}

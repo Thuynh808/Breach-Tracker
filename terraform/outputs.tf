@@ -93,3 +93,7 @@ output "vpc_link_sg_id" {
   description = "security group id of vpc link"
 }
 
+output "api_id" {
+  value       = module.api_gateway.api_id
+  description = "id of api"
+}

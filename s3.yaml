@@ -9,12 +9,8 @@
   - name: create bucket
     amazon.aws.s3_bucket:
       name: "{{ project_name }}-s3"
-      state: present
-  - name: delete public access block for s3
-    shell: "aws s3api delete-public-access-block --bucket {{ project_name }}-s3"
-  - name: update bucket policy
-    amazon.aws.s3_bucket:
-      name: "{{ project_name }}-s3"
+      object_ownership: BucketOwnerPreferred
+      delete_public_access: true
       policy: "{{ lookup('template','./s3_policy.json.j2') }}"
       state: present
   - name: upload index.html
@@ -41,3 +37,12 @@
           allowed_headers:
             - "*"
           max_age_seconds: 3000
+  - name: set fact for s3 endpoint
+    set_fact:
+      s3_endpoint: "http://{{ project_name }}-s3.s3-website-{{ defaultregion }}.amazonaws.com"
+  - name: configure CORS for API gateway
+    shell: >
+      aws apigatewayv2 update-api
+      --api-id {{ tf_outputs.api_id.value }}
+      --cors-configuration AllowOrigins='["{{ s3_endpoint }}"]'
+
