@@ -45,4 +45,10 @@
       aws apigatewayv2 update-api
       --api-id {{ tf_outputs.api_id.value }}
       --cors-configuration AllowOrigins='["{{ s3_endpoint }}"]'
+  - name: debug
+    debug:
+      var: "{{ item }}"
+    loop:
+      - s3_endpoint
+      - tf_outputs.api_endpoint.value
 

@@ -17,7 +17,7 @@
 | Component         | Version  | Component         | Version  |
 |-------------------|----------|-------------------|----------|
 | Rocky Linux       | 9.4      | Python            | 3.9.21   |
-| AWS CLI           | Latest   | Pip               | 21.3.1   |
+| AWS CLI           | Latest   | Pip               | 24.3.1   |
 | Ansible           | 2.15     | Botocore          | 1.31.0   |
 | Community.general | 9.0      | Boto3             | 1.28.0   |
 | Amazon.aws        | 9.0      | Requests          | 2.28.2   | 
@@ -59,6 +59,7 @@ vim vars.yaml
 aws_access_key_id: "<your-access-key-id>"
 aws_secret_access_key: "<your-secret-access-key>"
 defaultregion: "us-east-1"
+project_name: "breach-tracker"
 ```
 ```bash
 vim terraform/myvars.tfvars
@@ -86,34 +87,11 @@ cd terraform
 terraform init
 terraform apply -var-file=myvars.tfvars -auto-approve
 terraform output -json > ../tf_outputs.json
+cd ..
+ansible-playbook s3.yaml -vv
 ```
   These commands will:
-  - Install and upgrade system packages
-  - Install `pip` modules with required versions
-  - Download, unzip and install `AWS CLI`
-  - Configure `AWS CLI`
-  - Create S3 bucket
-  - Set up a `Glue` database to organize CVE vulnerability data
-  - Run Python scripts to:
-    - Send GET requests to the NVD API to fetch the CVE dataset
-    - Upload the data to the `S3` bucket in batches for efficient storage
-    - Create a Glue table and define schemas for structured querying
-    - Set up an `Athena` workgroup for executing SQL queries on the data
 
-**Confirm Successful Execution:**
-```bash
-ansible --version
-python3 --version
-pip --version
-pip list | egrep "boto3|botocore|requests" 
-aws configure list
-aws sts get-caller-identity
-aws s3 ls
-aws s3 ls s3://cve-data-lake-thuynh/ #Change "cve-data-lake-thuynh" to your bucket name
-aws glue get-database --name glue_cve_data_lake
-aws glue get-tables --database-name glue_cve_data_lake | head
-aws athena list-work-groups | head
-```
 
 <details close>
   <summary> <h4>Image Results</h4> </summary>
