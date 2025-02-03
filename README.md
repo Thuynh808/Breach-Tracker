@@ -82,6 +82,11 @@ chmod 0600 vars.yaml
 
 ## Deployment
 
+**Run `setup_infra.yaml` playbook:**
+```bash
+ansible-playbook setup_infra.yaml -vv
+```
+
 **Run Terraform to build our cloud infrastructure:**
 ```bash
 cd terraform
