@@ -58,11 +58,14 @@
   - name: create aws ecr repository
     community.aws.ecs_ecr:
       name: "{{ project_name }}"
-  - name: setup ecr with docker, build, and tag image
+  - name: setup ecr with podman-docker
+    shell: "aws ecr get-login-password --region us-east-1 | podman login --username AWS --password-stdin {{ aws_account_id }}.dkr.ecr.us-east-1.amazonaws.com"
+  - name: pause for 5 seconds
+    pause:
+      seconds: 5
+  - name: build and tag image
     shell: "{{ item }}"
     loop:
-      - "aws ecr get-login-password --region us-east-1 | podman login --username AWS --password-stdin {{ aws_account_id }}.dkr.ecr.us-east-1.amazonaws.com"
-      - "sleep 5"
       - "podman build --platform linux/amd64 -t {{ project_name }} ."
       - "podman tag {{ project_name }}:latest {{ aws_account_id }}.dkr.ecr.us-east-1.amazonaws.com/{{ project_name }}:latest"
   - name: push image to ecr
