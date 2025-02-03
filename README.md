@@ -2,15 +2,17 @@
 
 ## Project Overview
 
-
+Breach Tracker is an AWS-based architecture designed to automate the retrieval and serving of breach data from "Have I Been Pwned". The project leverages ECS (Fargate), API Gateway, ALB, ECR, Terraform, and Ansible to deploy a scalable and secure backend for breach tracking.
 
 ## Components
 
-
-
-## Use Case
-
-
+VPC & Networking: Configured public and private subnets, NAT Gateway, and Security Groups.
+ECS & ECR: Containerized Flask application for fetching breach data.
+ALB: Distributes traffic to ECS tasks securely.
+API Gateway: Provides a public-facing API interface.
+Terraform: Automates AWS resource provisioning.
+Ansible: Automates environment setup and container deployment.
+Security & IAM: Ensures secure authentication and permissions for services.
 
 ## Versions
 
@@ -31,6 +33,11 @@
   - Allocate sufficient resources: **2 CPUs, 4GB RAM**
 - **AWS Account**
    - An AWS account with provisioned access-key and secret-key
+
+ AWS account with permissions to create ECS, ALB, API Gateway, and IAM roles.
+Terraform and Ansible installed locally.
+Podman installed for building and pushing Docker images to ECR.
+API key for "Have I Been Pwned".
 
 ## Environment Setup
 
@@ -117,26 +124,6 @@ ansible-playbook s3.yaml -vv
 ---
 <br>
 
-## Athena Queries
-
-The `athena_queries.yaml` file contains sample queries designed to extract valuable insights from the CVE data lake. Each query focuses on a specific aspect of vulnerability management, such as critical vulnerabilities, vendor trends, or severity distributions.
-
-
-**Extending Queries**
-- This file can be easily updated with new queries to meet evolving requirements. Simply modify `athena_queries.yaml`, then run the playbook to generate updated JSON report files, enabling continuous adaptability and insights.
-
-**Now let's run the Sample Query Reports Playbook:**
-```bash
-ansible-playbook sample-reports.yaml -vv
-```
-  The `sample-reports.yaml` playbook will:
-  - Define `Athena` queries to extract insights from the CVE data stored in the data lake
-  - Execute the queries in `Athena` and capture the corresponding execution IDs
-  - Download the resulting CSV files from the `S3` bucket using the captured execution IDs
-  - Process, format the CSV files into JSON, and output to `query_results` directory using a Python script for improved readability and usability
-
-> Note: *This playbook automates the process of running predefined queries, fetching their results, and preparing them in JSON format for use in dashboards, reports, or further analysis.*
-
 **Confirm Successful Execution:**
 
 ```bash
@@ -158,6 +145,61 @@ cat ~/CVEDataLake/query_results/Top_100_Critical_Windows_Vulnerabilities.json | 
 ---
 <br>
 
+## Challenges
+
+1. VPC & Subnet Issues
+ALB was initially deployed in private subnets, causing connectivity issues.
+ECS tasks could not access the internet due to missing NAT Gateway.
+Solution:
+
+Moved ALB to public subnets and kept ECS tasks in private subnets.
+Added a NAT Gateway for outbound access from ECS tasks.
+2. ECS & ECR Challenges
+Podman compatibility issues when pushing images to ECR.
+ECS Service failed due to missing target group attachment.
+Solution:
+
+Used Podman’s ECR login method instead of Docker CLI.
+Ensured correct image tagging before pushing (repository:tag).
+Added aws_lb_target_group_attachment in Terraform.
+3. ALB & API Gateway Integration Issues
+API Gateway initially returned 403 Forbidden due to missing IAM permissions.
+ALB security group allowed API Gateway CIDR blocks instead of VPC Link CIDR blocks.
+Solution:
+
+Updated API Gateway integration URI to ALB Listener ARN.
+Added IAM permissions for API Gateway to invoke the integration.
+4. API Gateway Issues
+API Gateway returned Missing Authentication Token due to incorrect route mappings.
+API Gateway returned Not Found (404) due to incorrect /breaches/{proxy+} mapping.
+Solution:
+
+Fixed route key (ANY /breaches instead of ANY /breaches/{proxy+}).
+Ensured API Gateway was deployed correctly after updates.
+5. Security Group & Networking Issues
+ECS tasks couldn't access the internet for API calls.
+API Gateway security group not allowing traffic to ALB.
+Solution:
+
+Routed ECS tasks through a NAT Gateway for outbound access.
+Updated API Gateway and ALB security groups accordingly.
+6. Terraform & Ansible Automation Issues
+Terraform variable issues (private_subnet_id needed to be a list).
+Incorrect target group port mapping (hostPort: 80 instead of 8080).
+Solution:
+
+Fixed Terraform variables and security group rule conflicts.
+Ensured correct port mapping in the target group.
+
+## Lessons Learned
+1️⃣ API Gateway and Flask API must have matching route mappings.
+2️⃣ ALB must have the correct listener and forwarding rules to ECS tasks.
+3️⃣ ECS tasks in private subnets require a NAT Gateway for outbound API calls.
+4️⃣ Flask must bind to 0.0.0.0:80 to be reachable within ECS containers.
+5️⃣ IAM permissions must be precise but allow necessary AWS interactions.
+
 ## Conclusion
 
-CVEDataLake combines the power of AWS tools like S3, Glue, and Athena with Ansible automation to make vulnerability management seamless and efficient! Its modular design means you can easily add new queries, scale for larger datasets, or tweak it to meet specific needs. This makes it an incredible tool for SOC teams, security analysts, and even generating custom reports for audits, dashboards, or compliance.
+Building Breach Tracker was a solid hands-on experience in AWS infrastructure, automation, and debugging real-world deployment issues. I ran into plenty of challenges—networking misconfigurations, IAM permission headaches, API Gateway quirks—but solving them helped me get a deeper understanding of ECS, ALB, API Gateway, Terraform, and Ansible. Now, I have a fully automated system that fetches and serves breach data, and I’ve reinforced best practices for networking, security, and infrastructure-as-code along the way. There’s always room for improvement, but for now, I’m happy with how everything came together. 🚀
+
+
