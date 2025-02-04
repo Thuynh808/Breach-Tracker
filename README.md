@@ -8,7 +8,11 @@ Breach Tracker is an AWS-based architecture designed to automate the retrieval a
 
 - **Rocky Linux**: Used as a development environment for building, testing, and deploying infrastructure and application components
 - **Ansible**: Automate environment setup with packages and dependencies along with `ECR` repository creation with image
-- **Terraform**: Build modules to automate and manage infrastructure as code with reusable configurations
+- **Terraform**: Modules to automate and manage infrastructure as code with reusable configurations
+- **Python Flask App**:
+  - Fetches breach data from the **Have I Been Pwned** API
+  - Sorts breaches by date to show the latest first
+  - Serves the data as JSON for analysis
 - **VPC & Networking**:
   - Configured with `public` and `private` subnets across two availability zones for high availability and enhanced security
   - `ECS` tasks and `ALB` are placed in `private` subnets to restrict public access
