@@ -103,6 +103,7 @@ ansible-playbook setup_infra.yaml -vv
 ```bash
 ansible --version
 terraform --version
+podman --version
 python3 --version
 pip --version
 pip list | egrep "boto3|botocore|requests" 
@@ -112,7 +113,7 @@ aws ecr list-images --repository-name breach-tracker --region us-east-1
 ```
 
 <details close>
-  <summary> <h4>Image Results</h4> </summary>
+  <summary> <h3>Image Results</h3> </summary>
     
 ![CVEDataLake](https://i.imgur.com/TOHj0Kz.png)
 ![CVEDataLake](https://i.imgur.com/PhcouoU.png)
@@ -130,41 +131,38 @@ terraform init
 terraform apply -var-file=myvars.tfvars -auto-approve
 terraform output -json > ../tf_outputs.json
 ```
-
+  The above commands will:
+  - Initialize the working directory for `Terraform` by downloading providers and initializing the backend
+  - Provisions and modifies infrastructure based on our configurations:
+    - VPC module
+    - IAM module
+    - ECS module
+    - ALB module
+    - API Gateway module
+  - Output `json` file with result variables from our Terraform run
+    
 <details close>
-  <summary> <h4>Image Results</h4> </summary>
+  <summary> <h3>Image Results</h3> </summary>
     
 ![CVEDataLake](https://i.imgur.com/TOHj0Kz.png)
 ![CVEDataLake](https://i.imgur.com/PhcouoU.png)
-  
-- **Environment Setup**:
----
-<br><br>
 ![CVEDataLake](https://i.imgur.com/wob1hNt.png)
 
-**Glue Table Schema**: 
- - Navigating to the Glue table in the AWS console, we can verify its schema to ensure it aligns with the data structure needed for our queries 
-  </details>
-
----
-<br>
-
-**Bonus: Ansible playbook to setup `s3` bucket and host a static website to populate a table with our breach data**
-
+</details>
+<details close>
+  <summary> <h3>Extended Bonus Feature</h3> </summary>
+  
+**Run Ansible playbook to setup `s3` bucket and host a static website to populate a simple table with our breach data:**
 ```bash
 cd ../
 ansible-playbook s3.yaml -vv
 ```
-
-**Confirm Successful Execution:**
-
-```bash
-aws s3 ls s3://cve-data-lake-thuynh/athena-results/ #Change "cve-data-lake-thuynh" to your bucket name
-ll ~/CVEDataLake/query_results/
-cat ~/CVEDataLake/query_results/Top_100_Critical_Windows_Vulnerabilities.json | head -40
-```
-<details close>
-  <summary> <h4>Image Results</h4> </summary>
+  The `s3.yaml` playbook will:
+  - Set variables from our *`tf_outputs.json`* for `Ansible` 
+  - Create `s3` bucket with `IAM` policy
+  - Upload sample `index.html` to display our data
+  - Setup our static website
+  - Configure `CORS` settings for `s3` and `API Gateway`
     
 ![CVEDataLake](https://i.imgur.com/idwIvVZ.png)
 ![CVEDataLake](https://i.imgur.com/fWI7OLO.png)
