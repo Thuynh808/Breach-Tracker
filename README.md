@@ -1,4 +1,4 @@
-![CVEDataLake]() 
+![breach-tracker]() 
 
 ## Project Overview
 
@@ -16,7 +16,9 @@ Breach Tracker is an AWS-based architecture designed to automate the retrieval a
 - **ECS & ECR**: Flask application containerized and deployed on `ECS Fargate` for fetching breach data, with images stored in `ECR`
 - **ALB**: `Internal` Application Load Balancer routes traffic securely to `ECS` tasks within `private` subnets
 - **API Gateway**: Public API interface integrated with ALB via VPC Link for secure communication between `public` and `private` subnets
-- **VPC Link**: Bridges the `API Gateway` with the internal `ALB` to secure traffic routing from the public API to private resources
+- **VPC Link**:
+  - Bridges the `API Gateway` with the internal `ALB` to secure traffic routing from the public API to private resources
+  - Restricted `security group` to only allow inbound traffic from AWS's public API Gateway endpoints CIDR ranges 
 - **Security & IAM**: Configured `security groups` for traffic control and `IAM` roles to ensure appropriate permissions for ECS, ALB, and API Gateway interactions
 
 ## Versions
@@ -115,8 +117,9 @@ aws ecr list-images --repository-name breach-tracker --region us-east-1
 <details close>
   <summary> <h3>Image Results</h3> </summary>
     
-![CVEDataLake](https://i.imgur.com/TOHj0Kz.png)
-![CVEDataLake](https://i.imgur.com/PhcouoU.png)
+![breach-tracker]()
+![breach-tracker]() 
+![breach-tracker]() 
 </details>
 
 ---
@@ -144,9 +147,9 @@ terraform output -json > ../tf_outputs.json
 <details close>
   <summary> <h3>Image Results</h3> </summary>
     
-![CVEDataLake](https://i.imgur.com/TOHj0Kz.png)
-![CVEDataLake](https://i.imgur.com/PhcouoU.png)
-![CVEDataLake](https://i.imgur.com/wob1hNt.png)
+![breach-tracker]()
+![breach-tracker]() 
+![breach-tracker]() 
 
 </details>
 <details close>
@@ -164,8 +167,9 @@ ansible-playbook s3.yaml -vv
   - Setup our static website
   - Configure `CORS` settings for `s3` and `API Gateway`
     
-![CVEDataLake](https://i.imgur.com/idwIvVZ.png)
-![CVEDataLake](https://i.imgur.com/fWI7OLO.png)
+![breach-tracker]()
+![breach-tracker]() 
+![breach-tracker]() 
 
   - **List S3**: Bucket contains results under athena-results/, including .csv and .csv.metadata files
   - **List local directory**: Confirmed `~/CVEDataLake/query_results/` has multiple JSON query result files
@@ -174,59 +178,6 @@ ansible-playbook s3.yaml -vv
 
 ---
 <br>
-
-## Challenges
-
-1. VPC & Subnet Issues
-ALB was initially deployed in private subnets, causing connectivity issues.
-ECS tasks could not access the internet due to missing NAT Gateway.
-Solution:
-
-Moved ALB to public subnets and kept ECS tasks in private subnets.
-Added a NAT Gateway for outbound access from ECS tasks.
-2. ECS & ECR Challenges
-Podman compatibility issues when pushing images to ECR.
-ECS Service failed due to missing target group attachment.
-Solution:
-
-Used Podman’s ECR login method instead of Docker CLI.
-Ensured correct image tagging before pushing (repository:tag).
-Added aws_lb_target_group_attachment in Terraform.
-3. ALB & API Gateway Integration Issues
-API Gateway initially returned 403 Forbidden due to missing IAM permissions.
-ALB security group allowed API Gateway CIDR blocks instead of VPC Link CIDR blocks.
-Solution:
-
-Updated API Gateway integration URI to ALB Listener ARN.
-Added IAM permissions for API Gateway to invoke the integration.
-4. API Gateway Issues
-API Gateway returned Missing Authentication Token due to incorrect route mappings.
-API Gateway returned Not Found (404) due to incorrect /breaches/{proxy+} mapping.
-Solution:
-
-Fixed route key (ANY /breaches instead of ANY /breaches/{proxy+}).
-Ensured API Gateway was deployed correctly after updates.
-5. Security Group & Networking Issues
-ECS tasks couldn't access the internet for API calls.
-API Gateway security group not allowing traffic to ALB.
-Solution:
-
-Routed ECS tasks through a NAT Gateway for outbound access.
-Updated API Gateway and ALB security groups accordingly.
-6. Terraform & Ansible Automation Issues
-Terraform variable issues (private_subnet_id needed to be a list).
-Incorrect target group port mapping (hostPort: 80 instead of 8080).
-Solution:
-
-Fixed Terraform variables and security group rule conflicts.
-Ensured correct port mapping in the target group.
-
-## Lessons Learned
-1️⃣ API Gateway and Flask API must have matching route mappings.
-2️⃣ ALB must have the correct listener and forwarding rules to ECS tasks.
-3️⃣ ECS tasks in private subnets require a NAT Gateway for outbound API calls.
-4️⃣ Flask must bind to 0.0.0.0:80 to be reachable within ECS containers.
-5️⃣ IAM permissions must be precise but allow necessary AWS interactions.
 
 ## Conclusion
 
