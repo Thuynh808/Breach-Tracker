@@ -134,11 +134,11 @@ terraform output -json > ../tf_outputs.json
   The above commands will:
   - Initialize the working directory for `Terraform` by downloading providers and initializing the backend
   - Provisions and modifies infrastructure based on our configurations:
-    - VPC module
-    - IAM module
-    - ECS module
-    - ALB module
-    - API Gateway module
+    - VPC Module: Creates public and private subnets, NAT Gateway, and networking resources
+    - IAM Module: Defines roles, policies, and permissions for secure service access
+    - ECS Module: Provisions Fargate tasks and services for the breach-tracking app
+    - ALB Module: Sets up an internal load balancer for secure traffic distribution
+    - API Gateway Module: Configures an HTTP API with a VPC Link for private ALB integration
   - Output `json` file with result variables from our Terraform run
     
 <details close>
