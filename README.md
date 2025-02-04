@@ -191,3 +191,5 @@ Building Breach Tracker was a solid hands-on experience into AWS infrastructure,
 The greatest highlight is integrating **private and public services** which required careful routing, security group tuning, and IAM permissions to balance security and functionality. 
 
 Now, I have a fully automated system that fetches and serves breach data while reinforcing best practices in networking, security, and infrastructure-as-code. There’s always room for improvement, but for now, I’m happy with how everything came together. 🚀
+
+> Note: Run `cleanup.sh` to delete all resources
