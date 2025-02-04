@@ -9,10 +9,10 @@ Breach Tracker is an AWS-based architecture designed to automate the retrieval a
 - **VPC & Networking**:
   - Configured with `public` and `private` subnets across two availability zones for high availability and enhanced security
   - `ECS` tasks and `ALB` are placed in `private` subnets to restrict public access
-- **NAT Gateway**: Deployed in each `public` subnet to allow `ECS` tasks to securely fetch breach data from external sources while maintaining a private network
+- **NAT Gateway**: Deployed in `public` subnets; enables ECS tasks in `private` subnets to securely fetch breach data from external sources
 - **ECS & ECR**: Flask application containerized and deployed on `ECS Fargate` for fetching breach data, with images stored in `ECR`
-- **ALB**: Internal Application Load Balancer routes traffic securely to `ECS` tasks within `private` subnets
-- **API Gateway**: Public-facing API interface, integrated with the `ALB` through a `VPC Link` for secure communication between `public` and `private` networks
+- **ALB**: `Internal` Application Load Balancer routes traffic securely to `ECS` tasks within `private` subnets
+- **API Gateway**: Public API interface integrated with ALB via VPC Link for secure communication between `public` and `private` subnets
 - **VPC Link**: Bridges the `API Gateway` with the internal `ALB` to secure traffic routing from the public API to private resources
 - **Terraform**: Manages infrastructure as code, automating the provisioning of AWS resources
 - **Ansible**: Automate environment setup with packages and dependencies along with `ECR` repository creation 
