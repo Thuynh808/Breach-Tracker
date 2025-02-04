@@ -6,6 +6,9 @@ Breach Tracker is an AWS-based architecture designed to automate the retrieval a
 
 ## Architecture:
 
+- **Rocky Linux**: Used as a development environment for building, testing, and deploying infrastructure and application components
+- **Ansible**: Automate environment setup with packages and dependencies along with `ECR` repository creation with image
+- **Terraform**: Build modules to automate and manage infrastructure as code with reusable configurations
 - **VPC & Networking**:
   - Configured with `public` and `private` subnets across two availability zones for high availability and enhanced security
   - `ECS` tasks and `ALB` are placed in `private` subnets to restrict public access
@@ -14,8 +17,6 @@ Breach Tracker is an AWS-based architecture designed to automate the retrieval a
 - **ALB**: `Internal` Application Load Balancer routes traffic securely to `ECS` tasks within `private` subnets
 - **API Gateway**: Public API interface integrated with ALB via VPC Link for secure communication between `public` and `private` subnets
 - **VPC Link**: Bridges the `API Gateway` with the internal `ALB` to secure traffic routing from the public API to private resources
-- **Terraform**: Manages infrastructure as code, automating the provisioning of AWS resources
-- **Ansible**: Automate environment setup with packages and dependencies along with `ECR` repository creation 
 - **Security & IAM**: Configured `security groups` for traffic control and `IAM` roles to ensure appropriate permissions for ECS, ALB, and API Gateway interactions
 
 ## Versions
@@ -37,7 +38,7 @@ Breach Tracker is an AWS-based architecture designed to automate the retrieval a
 - **AWS Account**
    - An AWS account with provisioned access-key and secret-key
 
-## Environment Setup
+## Initial Setup
 
 **Run the following to setup our VM:**
 ```bash
@@ -54,7 +55,7 @@ ansible-galaxy collection install -r requirements.yaml -vv
   - Navigates to project directory
   - Install required Ansible Collections
 
-## Define Variables
+### Define Variables
 
 **Update variables with necessary values for files: `vars.yaml` and `myvars.tfvars`:**
 ```bash
@@ -83,11 +84,42 @@ availability_zones  = ["us-east-1a", "us-east-1b"]
 chmod 0600 vars.yaml 
 ```
 > Note: Keep the sensitive file local. Add to `.gitignore` if uploading to GitHub
-<br>  
+<br>
+
+## Environment Setup
+
 **Run `setup_infra.yaml` playbook:**
 ```bash
 ansible-playbook setup_infra.yaml -vv
 ```
+  The `setup_infra.yaml` playbook will:
+  - Install and upgrade required packages
+  - Install `pip` modules with required versions
+  - Download, unzip and install `AWS CLI`
+  - Configure `AWS CLI` with credentials
+  - Build the `Flask` app and upload to `ECR`
+
+**Confirm Successful Execution:**
+```bash
+ansible --version
+terraform --version
+python3 --version
+pip --version
+pip list | egrep "boto3|botocore|requests" 
+aws configure list
+aws sts get-caller-identity
+aws ecr list-images --repository-name breach-tracker --region us-east-1
+```
+
+<details close>
+  <summary> <h4>Image Results</h4> </summary>
+    
+![CVEDataLake](https://i.imgur.com/TOHj0Kz.png)
+![CVEDataLake](https://i.imgur.com/PhcouoU.png)
+</details>
+
+---
+<br>
 
 ## Deployment
 
@@ -140,7 +172,7 @@ cat ~/CVEDataLake/query_results/Top_100_Critical_Windows_Vulnerabilities.json | 
   - **List S3**: Bucket contains results under athena-results/, including .csv and .csv.metadata files
   - **List local directory**: Confirmed `~/CVEDataLake/query_results/` has multiple JSON query result files
   - **Examine JSON file**: Results confirm properly formatted structured JSON data
-  </details>
+</details>
 
 ---
 <br>
