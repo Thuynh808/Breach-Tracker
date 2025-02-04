@@ -2,17 +2,21 @@
 
 ## Project Overview
 
-Breach Tracker is an AWS-based architecture designed to automate the retrieval and serving of breach data from "Have I Been Pwned". The project leverages ECS (Fargate), API Gateway, ALB, ECR, Terraform, and Ansible to deploy a scalable and secure backend for breach tracking.
+Breach Tracker is an AWS-based architecture designed to automate the retrieval and serving of breach data from **"Have I Been Pwned"**. The project leverages ECS (Fargate), API Gateway, ALB, ECR, Terraform, and Ansible to deploy a scalable and secure backend for breach tracking.
 
-## Components
+## Architecture:
 
-VPC & Networking: Configured public and private subnets, NAT Gateway, and Security Groups.
-ECS & ECR: Containerized Flask application for fetching breach data.
-ALB: Distributes traffic to ECS tasks securely.
-API Gateway: Provides a public-facing API interface.
-Terraform: Automates AWS resource provisioning.
-Ansible: Automates environment setup and container deployment.
-Security & IAM: Ensures secure authentication and permissions for services.
+- **VPC & Networking**:
+  - Configured with `public` and `private` subnets across two availability zones for high availability and enhanced security
+  - `ECS` tasks and `ALB` are placed in `private` subnets to restrict public access
+- **NAT Gateway**: Deployed in each `public` subnet to allow `ECS` tasks to securely fetch breach data from external sources while maintaining a private network
+- **ECS & ECR**: Flask application containerized and deployed on `ECS Fargate` for fetching breach data, with images stored in `ECR`
+- **ALB**: Internal Application Load Balancer routes traffic securely to `ECS` tasks within `private` subnets
+- **API Gateway**: Public-facing API interface, integrated with the `ALB` through a `VPC Link` for secure communication between `public` and `private` networks
+- **VPC Link**: Bridges the `API Gateway` with the internal `ALB` to secure traffic routing from the public API to private resources
+- **Terraform**: Manages infrastructure as code, automating the provisioning of AWS resources
+- **Ansible**: Automate environment setup with packages and dependencies along with `ECR` repository creation 
+- **Security & IAM**: Configured `security groups` for traffic control and `IAM` roles to ensure appropriate permissions for ECS, ALB, and API Gateway interactions
 
 ## Versions
 
@@ -25,7 +29,6 @@ Security & IAM: Ensures secure authentication and permissions for services.
 | Amazon.aws        | 9.0      | Requests          | 2.28.2   | 
 | Terraform         | 1.10.5   | Podman-Docker     | 5.2.2    | 
  
-
 ## Prerequisites
 
 - **Rocky Linux VM**
@@ -33,11 +36,6 @@ Security & IAM: Ensures secure authentication and permissions for services.
   - Allocate sufficient resources: **2 CPUs, 4GB RAM**
 - **AWS Account**
    - An AWS account with provisioned access-key and secret-key
-
- AWS account with permissions to create ECS, ALB, API Gateway, and IAM roles.
-Terraform and Ansible installed locally.
-Podman installed for building and pushing Docker images to ECR.
-API key for "Have I Been Pwned".
 
 ## Environment Setup
 
