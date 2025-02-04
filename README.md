@@ -6,9 +6,12 @@ Breach Tracker is an AWS-based architecture designed to automate the retrieval a
 
 ## Architecture:
 
-- **Rocky Linux**: Used as a development environment for building, testing, and deploying infrastructure and application components
-- **Ansible**: Automate environment setup with packages/dependencies and `ECR` repository creation with image
-- **Terraform**: Modules to automate and manage infrastructure as code with reusable configurations
+- **Rocky Linux**:
+  - Used as a development environment for building, testing, and deploying infrastructure and application components
+- **Ansible**:
+  - Automate environment setup with packages/dependencies and `ECR` repository creation with image
+- **Terraform**:
+  - Modules to automate and manage infrastructure as code with reusable configurations
 - **Python Flask App**:
   - Fetches breach data from the **Have I Been Pwned** API
   - Sorts breaches by date to show the latest first
@@ -16,14 +19,19 @@ Breach Tracker is an AWS-based architecture designed to automate the retrieval a
 - **VPC & Networking**:
   - Configured with `public` and `private` subnets across two availability zones for high availability and enhanced security
   - `ECS` tasks and `ALB` are placed in `private` subnets to restrict public access
-- **NAT Gateway**: Deployed in `public` subnets; enables ECS tasks in `private` subnets to securely fetch breach data from external sources
-- **ECS & ECR**: Flask application containerized and deployed on `ECS Fargate` for fetching breach data, with images stored in `ECR`
-- **ALB**: `Internal` Application Load Balancer routes traffic securely to `ECS` tasks within `private` subnets
-- **API Gateway**: Public API interface integrated with ALB via VPC Link for secure communication between `public` and `private` subnets
+- **NAT Gateway**:
+  - Deployed in `public` subnets; enables ECS tasks in `private` subnets to securely fetch breach data from external sources
+- **ECS & ECR**:
+  - Flask application containerized and deployed on `ECS Fargate` for fetching breach data, with images stored in `ECR`
+- **ALB**:
+  - `Internal` Application Load Balancer routes traffic securely to `ECS` tasks within `private` subnets
+- **API Gateway**:
+  - Public API interface integrated with ALB via VPC Link for secure communication between `public` and `private` subnets
 - **VPC Link**:
   - Bridges the `API Gateway` with the internal `ALB` to secure traffic routing from the public API to private resources
   - Restricted `security group` to only allow inbound traffic from AWS's public API Gateway endpoints CIDR ranges 
-- **Security & IAM**: Configured `security groups` for traffic control and `IAM` roles to ensure appropriate permissions for ECS, ALB, and API Gateway interactions
+- **Security & IAM**:
+  - Configured `security groups` for traffic control and `IAM` roles to ensure appropriate permissions for ECS, ALB, and API Gateway interactions
 
 ## Versions
 
