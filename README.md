@@ -181,6 +181,8 @@ ansible-playbook s3.yaml -vv
 
 ## Conclusion
 
-Building Breach Tracker was a solid hands-on experience in AWS infrastructure, automation, and debugging real-world deployment issues. I ran into plenty of challenges—networking misconfigurations, IAM permission headaches, API Gateway quirks—but solving them helped me get a deeper understanding of ECS, ALB, API Gateway, Terraform, and Ansible. Now, I have a fully automated system that fetches and serves breach data, and I’ve reinforced best practices for networking, security, and infrastructure-as-code along the way. There’s always room for improvement, but for now, I’m happy with how everything came together. 🚀
+Building Breach Tracker was a solid hands-on experience into AWS infrastructure, automation, and debugging real-world deployment issues. I ran into countless networking misconfigurations, IAM headaches, and API Gateway problems. Solving them gave me a stronger understanding of ECS, ALB, API Gateway, Terraform, and Ansible. 
 
+The greatest highlight is integrating **private and public services** which required careful routing, security group tuning, and IAM permissions to balance security and functionality. 
 
+Now, I have a fully automated system that fetches and serves breach data while reinforcing best practices in networking, security, and infrastructure-as-code. There’s always room for improvement, but for now, I’m happy with how everything came together. 🚀
