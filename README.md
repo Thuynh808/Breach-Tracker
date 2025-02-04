@@ -56,7 +56,7 @@ ansible-galaxy collection install -r requirements.yaml -vv
 
 ## Define Variables
 
-**Update variables with proper values for files: `vars.yaml` and `myvars.tfvars`:**
+**Update variables with necessary values for files: `vars.yaml` and `myvars.tfvars`:**
 ```bash
 vim vars.yaml
 ```
@@ -74,7 +74,7 @@ vim terraform/myvars.tfvars
 project_name        = "breach-tracker"
 aws_region          = "us-east-1"
 vpc_cidr            = "10.2.0.0/16"
-public_subnet_cidr  = ["10.2.22.0/24", "10.2.24.0/24"]
+public_subnet_cidr  = ["10.2.22.0/24", "10.2.24.0/24"] 
 private_subnet_cidr = ["10.2.23.0/24", "10.2.25.0/24"]
 availability_zones  = ["us-east-1a", "us-east-1b"]
 ```
@@ -84,13 +84,12 @@ chmod 0600 vars.yaml
 ```
 > Note: Keep the sensitive file local. Add to `.gitignore` if uploading to GitHub
 <br>  
-
-## Deployment
-
 **Run `setup_infra.yaml` playbook:**
 ```bash
 ansible-playbook setup_infra.yaml -vv
 ```
+
+## Deployment
 
 **Run Terraform to build our cloud infrastructure:**
 ```bash
