@@ -1,4 +1,5 @@
-![breach-tracker]() 
+# BREACH TRACKER
+![breach-tracker](https://i.imgur.com/it1eYFZ.png) 
 
 ## Project Overview
 
@@ -130,9 +131,8 @@ aws ecr list-images --repository-name breach-tracker --region us-east-1
 <details close>
   <summary> <h3>Image Results</h3> </summary>
     
-![breach-tracker]()
-![breach-tracker]() 
-![breach-tracker]() 
+![breach-tracker](https://i.imgur.com/E7iWTvv.png)
+
 </details>
 
 ---
@@ -160,9 +160,10 @@ terraform output -json > ../tf_outputs.json
 <details close>
   <summary> <h3>Image Results</h3> </summary>
     
-![breach-tracker]()
-![breach-tracker]() 
-![breach-tracker]() 
+![breach-tracker](https://i.imgur.com/0ou3I6g.png)
+![breach-tracker](https://i.imgur.com/dpPJ0kV.png) 
+![breach-tracker](https://i.imgur.com/1D1kwN0.png) 
+![breach-tracker](https://i.imgur.com/DTeEr3z.png) 
 
 </details>
 <details close>
@@ -180,9 +181,8 @@ ansible-playbook s3.yaml -vv
   - Setup our static website
   - Configure `CORS` settings for `s3` and `API Gateway`
     
-![breach-tracker]()
-![breach-tracker]() 
-![breach-tracker]() 
+![breach-tracker](https://i.imgur.com/MRcDW0T.png)
+![breach-tracker](https://i.imgur.com/LzyyOOT.png) 
 
   - **List S3**: Bucket contains results under athena-results/, including .csv and .csv.metadata files
   - **List local directory**: Confirmed `~/CVEDataLake/query_results/` has multiple JSON query result files
