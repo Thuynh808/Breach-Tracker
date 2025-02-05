@@ -67,9 +67,9 @@
     shell: "{{ item }}"
     loop:
       - "podman build --platform linux/amd64 -t {{ project_name }} ."
-      - "podman tag {{ project_name }}:latest {{ aws_account_id }}.dkr.ecr.us-east-1.amazonaws.com/{{ project_name }}:latest"
+      - "podman tag {{ project_name }}:latest {{ aws_account_id }}.dkr.ecr.us-east-1.amazonaws.com/{{ project_name }}:{{ project_name }}-latest"
   - name: push image to ecr
-    shell: "podman push {{ aws_account_id }}.dkr.ecr.us-east-1.amazonaws.com/{{ project_name }}:latest"
+    shell: "podman push {{ aws_account_id }}.dkr.ecr.us-east-1.amazonaws.com/{{ project_name }}:{{ project_name }}-latest"
   - name: update ecr repo variable for terraform
     lineinfile:
       path: "./terraform/myvars.tfvars"
