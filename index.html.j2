@@ -20,7 +20,7 @@
             <tr>
                 <th>Name</th>
                 <th>Domain</th>
-                <th class="date-column">Breach Date</th>
+                <th class="date-column">Added Date</th>
                 <th>Data Classes</th>
             </tr>
         </thead>
@@ -46,15 +46,15 @@
                     return;
                 }
 
-                // Sort breaches by BreachDate (latest first)
-                breaches.sort((a, b) => new Date(b.BreachDate) - new Date(a.BreachDate));
+                // Sort breaches by AddedDate (latest first)
+                breaches.sort((a, b) => new Date(b.AddedDate) - new Date(a.AddedDate));
 
                 breaches.forEach(breach => {
                     console.log("Processing breach:", breach);
                     let row = `<tr>
                         <td>${breach.Name ?? "N/A"}</td>
                         <td>${breach.Domain ?? "N/A"}</td>
-                        <td class="date-column">${breach.BreachDate ?? "N/A"}</td>
+                        <td class="date-column">${breach.AddedDate ?? "N/A"}</td>
                         <td>${Array.isArray(breach.DataClasses) ? breach.DataClasses.join(", ") : "N/A"}</td>
                     </tr>`;
                     tableBody.innerHTML += row;
