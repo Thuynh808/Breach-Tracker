@@ -32,7 +32,7 @@ resource "aws_vpc_security_group_egress_rule" "ecs_sg" {
 
 data "aws_ecr_image" "service_image" {
   repository_name = var.ecr_repository_name
-  image_tag       = "latest"
+  image_tag       = "${var.project_name}-latest"
 }
 
 resource "aws_ecs_cluster" "bt_cluster" {
