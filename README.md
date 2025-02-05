@@ -3,7 +3,9 @@
 
 ## Project Overview
 
-Breach Tracker is an AWS-based architecture designed to automate the retrieval and serving of breach data from **"Have I Been Pwned"**. The project leverages ECS (Fargate), API Gateway, ALB, ECR, Terraform, and Ansible to deploy a scalable and secure backend for breach tracking.
+Breach Tracker is an AWS-based architecture that automates retrieving and serving breach data from "Have I Been Pwned". A custom Flask app fetches, processes, and sorts breach data by date added, then is containerized with Podman/Docker and deployed on ECS Fargate via ECR.
+
+The project uses Terraform for infrastructure provisioning and Ansible for automating setup and development environment. With multi-AZ, API Gateway, an Internal ALB, and NAT Gateways, it delivers a secure and scalable backend following best practices for breach tracking.
 
 ## Architecture:
 
