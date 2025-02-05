@@ -121,7 +121,7 @@ terraform --version
 podman --version
 python3 --version
 pip --version
-pip list | egrep "flask|boto3|botocore|requests" 
+pip list | egrep -i "Flask|boto3|botocore|requests" 
 aws configure list
 aws sts get-caller-identity
 aws ecr list-images --repository-name breach-tracker --region us-east-1
