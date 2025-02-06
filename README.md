@@ -25,7 +25,7 @@ The project uses Terraform for infrastructure provisioning and Ansible for autom
 - **NAT Gateway**:
   - Deployed in `public` subnets; enables ECS tasks in `private` subnets to securely fetch breach data from external sources
 - **ECS & ECR**:
-  - Flask application containerized and deployed on `ECS Fargate` for fetching breach data, with images stored in `ECR`
+  - Flask application containerized and deployed on `ECS Fargate` to fetch breach data; images stored in `ECR`
 - **ALB**:
   - `Internal` Application Load Balancer routes traffic securely to `ECS` tasks within `private` subnets
 - **API Gateway**:
