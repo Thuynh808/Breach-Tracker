@@ -1,5 +1,5 @@
 # BREACH TRACKER
-![breach-tracker](https://i.imgur.com/it1eYFZ.png) 
+![breach-tracker](https://i.imgur.com/tcFhk5o.png)
 
 ## Project Overview
 
@@ -135,6 +135,20 @@ aws ecr list-images --repository-name breach-tracker --region us-east-1
     
 ![breach-tracker](https://i.imgur.com/E7iWTvv.png)
 
+- **Dependencies**:
+  - Python 3.9.21 and pip are installed along with required libraries:
+    - boto3
+    - botocore
+    - Flask
+    - requests 
+  - Ansible 2.15.13  installed, configured, and ready for use
+  - Terraform 1.10.5 installed and functional
+  - Podman 5.2.2 installed for container management
+- **AWS CLI Configuration**:
+  - AWS credentials are set up using a shared credentials file, and the region is configured as us-east-1
+  - The IAM user is verified via sts get-caller-identity, confirming its UserId, Account, and ARN
+- **ECR Repository Status**:
+  - Amazon Elastic Container Registry (ECR) repository named `breach-tracker` exists, and tagged as `breach-tracker-latest`
 </details>
 
 ---
@@ -163,15 +177,55 @@ terraform output -json > ../tf_outputs.json
   <summary> <h3>Image Results</h3> </summary>
     
 ![breach-tracker](https://i.imgur.com/0ou3I6g.png)
-![breach-tracker](https://i.imgur.com/dpPJ0kV.png) 
-![breach-tracker](https://i.imgur.com/1D1kwN0.png) 
-![breach-tracker](https://i.imgur.com/DTeEr3z.png) 
 
+- **Module Initialization**:
+  - Modules for alb, api_gateway, ecs, iam, and vpc have been loaded from their respective directories
+- **Provider Setup**:
+  - The hashicorp/aws provider (v5.85.0) installed and locked for consistent infrastructure provisioning
+- **Successful Initialization**:
+  - Terraform ready for use
+<br><br>
+
+![breach-tracker](https://i.imgur.com/dpPJ0kV.png) 
+
+- **Resource Deployment**:
+  - Total of 76 resources were created, with no changes or deletions
+- **Successful Execution**:
+  - Terraform confirmed the completion of all resources, ensuring the infrastructure is ready to support the `Breach Tracker` application.
+<br><br>
+
+![breach-tracker](https://i.imgur.com/1D1kwN0.png) 
+
+Result outputs from our Terraform run:
+- **Application Endpoint**:
+  - The API Gateway endpoint is displayed as: `https://vlbbbfr738b.execute-api.us-east-1.amazonaws.com/breaches`
+  - This URL can be used to interact with the Breach Tracker API
+- **Application Load Balancer (ALB)**:
+  - Details of the ALB include its ARN, DNS name, listener ARN, and target group ARN, indicating a fully configured internal load balancer
+- **ECS Configuration**:
+  - Cluster name: breach-tracker-cluster
+  - Service name: breach-tracker-service
+  - ECS security group id
+  - Task definition ARN and execution role ARN are also listed
+- **Networking**:
+  - Internet Gateway ID
+  - NAT Gateway IDs
+  - Public and private route table IDs
+  - Subnet IDs for public and private subnets
+  - VPC ID and VPC Link security group ID
+<br><br>
+
+![breach-tracker](https://i.imgur.com/DTeEr3z.png) 
+<br><br>
+### LET'S GO!! Our API Endpoint is accessible and returning data!
+Fields include AddedDate, BreachDate, DataClasses, Domain, Description, and more, ensuring data is structured for further formatting
+<br><br>
 </details>
+
 <details close>
   <summary> <h3>Extended Bonus Feature</h3> </summary>
   
-**Run Ansible playbook to setup `s3` bucket and host a static website to populate a simple table with our breach data:**
+**Let's run the following Ansible playbook to setup an `s3` bucket and host a static website to populate a simple table with our breach data:**
 ```bash
 cd ../
 ansible-playbook s3.yaml -vv
@@ -186,6 +240,8 @@ ansible-playbook s3.yaml -vv
 ![breach-tracker](https://i.imgur.com/MRcDW0T.png)
 ![breach-tracker](https://i.imgur.com/LzyyOOT.png) 
 
+The Breach Tracker Static Website displays breach data in a table format with Name, Domain, Added Date, and Data Classes. This sample demonstrates how data from the API Gateway and Breach Tracker app can be utilized.
+
 </details>
 
 ---
@@ -193,10 +249,8 @@ ansible-playbook s3.yaml -vv
 
 ## Conclusion
 
-Building Breach Tracker was a solid hands-on experience into AWS infrastructure, automation, and debugging real-world deployment issues. I ran into countless networking misconfigurations, IAM headaches, and API Gateway problems. Solving them gave me a stronger understanding of ECS, ALB, API Gateway, Terraform, and Ansible. 
+Building Breach Tracker was a valuable hands-on experience with AWS infrastructure, automation, and debugging deployment issues. Using `depends_on` in Terraform ensured resources were created in the correct order, avoiding errors. A key highlight was integrating `private` and `public` services, requiring careful routing, security group tuning, and IAM adjustments.
 
-The greatest highlight is integrating **private and public services** which required careful routing, security group tuning, and IAM permissions to balance security and functionality. 
-
-Now, I have a fully automated system that fetches and serves breach data while reinforcing best practices in networking, security, and infrastructure-as-code. There’s always room for improvement, but for now, I’m happy with how everything came together. 🚀
+The system now fetches and serves breach data while following best practices in networking, security, and infrastructure-as-code. Future improvements could include HTTPS with TLS/SSL certificates and a Web Application Firewall (WAF), but for now, I’m happy with how everything came together. 🚀
 
 > Note: Run `cleanup.sh` to delete all resources
