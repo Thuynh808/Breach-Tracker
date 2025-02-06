@@ -186,9 +186,6 @@ ansible-playbook s3.yaml -vv
 ![breach-tracker](https://i.imgur.com/MRcDW0T.png)
 ![breach-tracker](https://i.imgur.com/LzyyOOT.png) 
 
-  - **List S3**: Bucket contains results under athena-results/, including .csv and .csv.metadata files
-  - **List local directory**: Confirmed `~/CVEDataLake/query_results/` has multiple JSON query result files
-  - **Examine JSON file**: Results confirm properly formatted structured JSON data
 </details>
 
 ---
