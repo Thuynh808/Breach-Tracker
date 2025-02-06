@@ -240,7 +240,9 @@ ansible-playbook s3.yaml -vv
 ![breach-tracker](https://i.imgur.com/MRcDW0T.png)
 ![breach-tracker](https://i.imgur.com/LzyyOOT.png) 
 
-The Breach Tracker Static Website displays breach data in a table format with Name, Domain, Added Date, and Data Classes. This sample demonstrates how data from the API Gateway and Breach Tracker app can be utilized.
+**The Breach Tracker Static Website displays breach data in a table format with Name, Domain, Added Date, and Data Classes.**
+
+This sample demonstrates how data from the API Gateway and Breach Tracker app can be utilized.
 
 </details>
 
