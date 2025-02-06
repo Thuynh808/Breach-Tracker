@@ -10,7 +10,7 @@ The project uses Terraform for infrastructure provisioning and Ansible for autom
 ## Architecture:
 
 - **Rocky Linux**:
-  - Used as a development environment for building, testing, and deploying infrastructure and application components
+  - Used as a development environment for building, testing, and deploying infrastructure and components
 - **Ansible**:
   - Automate environment setup with packages/dependencies and `ECR` repository creation with image
 - **Terraform**:
@@ -31,8 +31,8 @@ The project uses Terraform for infrastructure provisioning and Ansible for autom
 - **API Gateway**:
   - Public API interface integrated with ALB via VPC Link for secure communication between `public` and `private` subnets
 - **VPC Link**:
-  - Bridges the `API Gateway` with the internal `ALB` to secure traffic routing from the public API to private resources
-  - Restricted `security group` to only allow inbound traffic from AWS's public API Gateway endpoints CIDR ranges 
+  - Bridges the `API Gateway` with the internal `ALB` to secure traffic from the public API to private resources
+  - Restricted `security group` to only allow traffic from AWS's public API Gateway endpoints CIDR ranges 
 - **Security & IAM**:
   - Configured `security groups` for traffic control and `IAM` roles to ensure appropriate permissions for ECS, ALB, and API Gateway interactions
 
