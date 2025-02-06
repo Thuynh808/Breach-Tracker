@@ -112,7 +112,7 @@ ansible-playbook setup_infra.yaml -vv
 ```
   The `setup_infra.yaml` playbook will:
   - Install and upgrade required packages
-  - Install `pip` modules with required versions
+  - Install `pip` libraries with required versions
   - Download, unzip and install `AWS CLI`
   - Configure `AWS CLI` with credentials
   - Build the `Flask` app and upload to `ECR`
